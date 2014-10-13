@@ -100,7 +100,10 @@ class FormattedMetadata(object):
             value = self._resolve_value(name)
             if cache_key is not None:
                 cache.set(cache_key, value or '')
-            value = mark_safe(value)
+
+            if value is not None:
+                value = mark_safe(value)
+
             return BoundMetadataField(self.__metadata._meta.elements[name], value)
         else:
             raise AttributeError
