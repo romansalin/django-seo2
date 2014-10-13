@@ -35,9 +35,9 @@ class FormattedMetadata(object):
         self.__metadata = metadata
         if metadata._meta.use_cache:
             if metadata._meta.use_sites and site:
-                hexpath = hashlib.md5(iri_to_uri(site.domain+path)).hexdigest() 
+                hexpath = hashlib.md5(iri_to_uri(site.domain+path)).hexdigest()
             else:
-                hexpath = hashlib.md5(iri_to_uri(path)).hexdigest() 
+                hexpath = hashlib.md5(iri_to_uri(path)).hexdigest()
             if metadata._meta.use_i18n:
                 self.__cache_prefix = 'rollyourown.seo.%s.%s.%s' % (self.__metadata.__class__.__name__, hexpath, language)
             else:
@@ -48,7 +48,7 @@ class FormattedMetadata(object):
         self.__instances_cache = []
 
     def __instances(self):
-        """ Cache instances, allowing generators to be used and reused. 
+        """ Cache instances, allowing generators to be used and reused.
             This fills a cache as the generator gets emptied, eventually
             reading exclusively from the cache.
         """
@@ -59,7 +59,7 @@ class FormattedMetadata(object):
             yield instance
 
     def _resolve_value(self, name):
-        """ Returns an appropriate value for the given name. 
+        """ Returns an appropriate value for the given name.
             This simply asks each of the instances for a value.
         """
         for instance in self.__instances():
@@ -100,6 +100,7 @@ class FormattedMetadata(object):
             value = self._resolve_value(name)
             if cache_key is not None:
                 cache.set(cache_key, value or '')
+            value = mark_safe(value)
             return BoundMetadataField(self.__metadata._meta.elements[name], value)
         else:
             raise AttributeError
@@ -166,9 +167,9 @@ class MetadataBase(type):
         options = Options(Meta, help_text)
 
         # Collect and sort our elements
-        elements = [(key, attrs.pop(key)) for key, obj in attrs.items() 
+        elements = [(key, attrs.pop(key)) for key, obj in attrs.items()
                                         if isinstance(obj, MetadataField)]
-        elements.sort(lambda x, y: cmp(x[1].creation_counter, 
+        elements.sort(lambda x, y: cmp(x[1].creation_counter,
                                                 y[1].creation_counter))
         elements = SortedDict(elements)
 
@@ -221,7 +222,7 @@ class MetadataBase(type):
 
     # TODO: Move this function out of the way (subclasses will want to define their own attributes)
     def _get_instances(cls, path, context=None, site=None, language=None):
-        """ A sequence of instances to discover metadata. 
+        """ A sequence of instances to discover metadata.
             Each instance from each backend is looked up when possible/necessary.
             This is a generator to eliminate unnecessary queries.
         """
@@ -279,20 +280,20 @@ def get_linked_metadata(obj, name=None, context=None, site=None, language=None):
             model_md = ModelMetadata.objects.get(_content_type=content_type)
         except ModelMetadata.DoesNotExist:
             model_md = ModelMetadata(_content_type=content_type)
-        instances.append(model_md)    
+        instances.append(model_md)
     return FormattedMetadata(Metadata, instances, '', site, language)
 
 
 def create_metadata_instance(metadata_class, instance):
     # If this instance is marked as handled, don't do anything
-    # This typically means that the django admin will add metadata 
+    # This typically means that the django admin will add metadata
     # using eg an inline.
     if getattr(instance, '_MetadataFormset__seo_metadata_handled', False):
         return
 
     metadata = None
     content_type = ContentType.objects.get_for_model(instance)
-    
+
     # If this object does not define a path, don't worry about automatic update
     try:
         path = instance.get_absolute_url()
@@ -314,7 +315,7 @@ def create_metadata_instance(metadata_class, instance):
         else:
             # This is our instance!
             metadata = md
-    
+
     # If the path-based search didn't work, look for (or create) an existing
     # instance linked to this object.
     if not metadata:
@@ -324,7 +325,7 @@ def create_metadata_instance(metadata_class, instance):
 
 
 def populate_metadata(model, MetadataClass):
-    """ For a given model and metadata class, ensure there is metadata for every instance. 
+    """ For a given model and metadata class, ensure there is metadata for every instance.
     """
     content_type = ContentType.objects.get_for_model(model)
     for instance in model.objects.all():
@@ -333,8 +334,8 @@ def populate_metadata(model, MetadataClass):
 
 def _update_callback(model_class, sender, instance, created, **kwargs):
     """ Callback to be attached to a post_save signal, updating the relevant
-        metadata, or just creating an entry. 
-    
+        metadata, or just creating an entry.
+
         NB:
         It is theoretically possible that this code will lead to two instances
         with the same generic foreign key.  If you have non-overlapping URLs,
