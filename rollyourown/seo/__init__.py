@@ -13,3 +13,5 @@ def get_version():
         version = '%s %s %s' % (version, VERSION[3], VERSION[4])
     return version
 __version__ = get_version()
+
+default_app_config = 'rollyourown.seo.apps.SeoConfig'
