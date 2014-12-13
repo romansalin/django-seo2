@@ -60,7 +60,7 @@ class MetadataNode(template.Node):
 
         # If a variable name is given, store the result there
         if self.variable_name is not None:
-            context[self.variable_name] = metadata
+            context.dicts[0][self.variable_name] = metadata
             return ""
         else:
             return unicode(metadata)
@@ -83,7 +83,7 @@ def do_get_metadata(parser, token):
     metadata_name = None
     args = { 'as': None, 'for': None, 'in': None, 'on': None }
 
-    # If there are an even number of bits, 
+    # If there are an even number of bits,
     # a metadata name has been provided.
     if len(bits) % 2:
         metadata_name = bits[0]
@@ -97,10 +97,10 @@ def do_get_metadata(parser, token):
         key, value, bits = bits[0], bits[1], bits[2:]
         args[key] = value
 
-    return MetadataNode(metadata_name, 
-                variable_name = args['as'], 
-                target = args['for'], 
-                site = args['on'], 
+    return MetadataNode(metadata_name,
+                variable_name = args['as'],
+                target = args['for'],
+                site = args['on'],
                 language = args['in'])
 
 

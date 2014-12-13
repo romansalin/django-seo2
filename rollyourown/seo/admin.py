@@ -49,6 +49,8 @@ class SiteViewMetadataAdmin(admin.ModelAdmin):
 
 
 def register_seo_admin(admin_site, metadata_class):
+    """ Register the backends specified in Meta.backends with the admin """
+
     if metadata_class._meta.use_sites:
         path_admin = SitePathMetadataAdmin
         model_instance_admin = SiteModelInstanceMetadataAdmin
@@ -60,22 +62,27 @@ def register_seo_admin(admin_site, metadata_class):
         model_admin = ModelMetadataAdmin
         view_admin = ViewMetadataAdmin
 
-    class ModelAdmin(model_admin):
-        form = get_model_form(metadata_class)
+    backends = metadata_class._meta.backends
 
-    class ViewAdmin(view_admin):
-        form = get_view_form(metadata_class)
+    if 'model' in backends:
+        class ModelAdmin(model_admin):
+            form = get_model_form(metadata_class)
+        _register_admin(admin_site, metadata_class._meta.get_model('model'), ModelAdmin)
 
-    class PathAdmin(path_admin):
-        form = get_path_form(metadata_class)
+    if 'view' in backends:
+        class ViewAdmin(view_admin):
+            form = get_view_form(metadata_class)
+        _register_admin(admin_site, metadata_class._meta.get_model('view'), ViewAdmin)
 
-    class ModelInstanceAdmin(model_instance_admin):
-        pass
+    if 'path' in backends:
+        class PathAdmin(path_admin):
+            form = get_path_form(metadata_class)
+        _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmi
 
-    _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmin)
-    _register_admin(admin_site, metadata_class._meta.get_model('modelinstance'), ModelInstanceAdmin)
-    _register_admin(admin_site, metadata_class._meta.get_model('model'), ModelAdmin)
-    _register_admin(admin_site, metadata_class._meta.get_model('view'), ViewAdmin)
+    if 'modelinstance' in backends:
+        class ModelInstanceAdmin(model_instance_admin):
+            pass
+        _register_admin(admin_site, metadata_class._meta.get_model('modelinstance'), ModelInstanceAdmin)
 
 
 def _register_admin(admin_site, model, admin_class):
