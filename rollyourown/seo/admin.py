@@ -77,7 +77,7 @@ def register_seo_admin(admin_site, metadata_class):
     if 'path' in backends:
         class PathAdmin(path_admin):
             form = get_path_form(metadata_class)
-        _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmi
+        _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmin)
 
     if 'modelinstance' in backends:
         class ModelInstanceAdmin(model_instance_admin):
