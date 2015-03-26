@@ -322,6 +322,8 @@ def create_metadata_instance(metadata_class, instance):
         # It's harsh, but we need a unique path and will assume the other
         # link is outdated.
         if md._content_type != content_type or md._object_id != instance.pk:
+            if md._content_object is None:
+                return
             md._path = md._content_object.get_absolute_url()
             md.save()
             # Move on, this metadata instance isn't for us
