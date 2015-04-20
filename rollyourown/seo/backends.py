@@ -79,7 +79,7 @@ class BaseManager(models.Manager):
             site_id = settings.SITE_ID
         # Exclude entries for other sites
         where = ['_site_id IS NULL OR _site_id=%s']
-        return self.get_query_set().extra(where=where, params=[site_id])
+        return self.get_queryset().extra(where=where, params=[site_id])
 
     def for_site_and_language(self, site=None, language=None):
         queryset = self.on_current_site(site)
@@ -139,7 +139,7 @@ class MetadataBackend(object):
 
             if not options.use_sites:
                 def for_site_and_language(self, site=None, language=None):
-                    queryset = self.get_query_set()
+                    queryset = self.get_queryset()
                     if language:
                         queryset = queryset.filter(_language=language)
                     return queryset
@@ -336,7 +336,7 @@ def _resolve(value, model_instance=None, context=None):
         if context is None:
             context = Context()
         if model_instance is not None:
-            context[model_instance._meta.module_name] = model_instance
+            context[model_instance._meta.model_name] = model_instance
         value = Template(value).render(context)
     return value
 
