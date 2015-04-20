@@ -3,10 +3,10 @@ Django SEO tools
 ================
 
 .. image:: https://travis-ci.org/romansalin/django-seo.svg?branch=master
-    :target: https://travis-ci.org/romansalin/django-seo
+    :target: https://travis-ci.org/romansalin/django-seo?branch=master
 
-.. image:: https://coveralls.io/repos/romansalin/django-seo/badge.png
-    :target: https://coveralls.io/r/romansalin/django-seo
+.. image:: https://coveralls.io/repos/romansalin/django-seo/badge.svg?branch=master
+    :target: https://coveralls.io/r/romansalin/django-seo?branch=master
 
 This is a set of SEO tools for Django.
 It allows you to associate metadata with:
