@@ -2,6 +2,12 @@
 Django SEO tools
 ================
 
+.. image:: https://travis-ci.org/romansalin/django-seo.svg?branch=master
+    :target: https://travis-ci.org/romansalin/django-seo
+
+.. image:: https://coveralls.io/repos/romansalin/django-seo/badge.png
+    :target: https://coveralls.io/r/romansalin/django-seo
+
 This is a set of SEO tools for Django.
 It allows you to associate metadata with:
 
@@ -13,7 +19,7 @@ It allows you to associate metadata with:
 Metadata can be edited in the admin in a centralised place, but also alongside any associated models.
 
 This is however a framework, not an app. You therefore have
-complete control over the data you store. 
+complete control over the data you store.
 Here is an example of a definition::
 
     from rollyourown import seo
@@ -25,7 +31,7 @@ Here is an example of a definition::
         heading        = seo.Tag(name="h1")
         subheading     = seo.Tag(name="h2")
         extra          = seo.Raw(head=True)
-    
+
         # Adding some fields for facebook (opengraph)
         og_title       = seo.MetaTag(name="og:title", populate_from="title", verbose_name="facebook title")
         og_description = seo.MetaTag(name="og:description", populate_from="description", verbose_name='facebook description')

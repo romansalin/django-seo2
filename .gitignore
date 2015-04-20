@@ -1,7 +1,13 @@
 *.pyc
-coverage/*
+*.swp
+/build/
 docs/_build
-regressiontests/test.db
+.coverage
+coverage/*
+test.db
 rollyourown/seo/kogan.py
-regressiontests/settings_local.py
+tests/settings_local.py
+*.egg-info
+*.egg
 .DS_Store
+.idea
