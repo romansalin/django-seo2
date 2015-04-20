@@ -912,7 +912,7 @@ class Random(TestCase):
         self.page = Page.objects.create(type="abc")
         self.content_type = ContentType.objects.get_for_model(Page)
         self.model_metadata = self.Metadata.objects.get(_content_type=self.content_type,
-                                                    _object_id=self.page.id)
+                                                        _object_id=self.page.id)
         self.context = get_metadata(path=self.model_metadata._path)
 
     def test_default_fallback(self):
@@ -941,7 +941,7 @@ class Random(TestCase):
 
         self.remove_seo_tables()
 
-        call_command('syncdb', verbosity=0)
+        call_command('syncdb', interactive=False, verbosity=0)
 
         if not Metadata.objects.all():
             self.fail("No metadata objects created.")
