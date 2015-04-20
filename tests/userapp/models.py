@@ -1,4 +1,6 @@
+# -*- coding: UTF-8 -*-
 from django.db import models
+
 
 class Page(models.Model):
     title = models.CharField(max_length=255, default="", blank=True)
@@ -15,8 +17,8 @@ class Page(models.Model):
 
 class Product(models.Model):
     meta_description = models.TextField(default="")
-    meta_keywords    = models.CharField(max_length=255, default="")
-    meta_title       = models.CharField(max_length=255, default="")
+    meta_keywords = models.CharField(max_length=255, default="")
+    meta_title = models.CharField(max_length=255, default="")
 
     @models.permalink
     def get_absolute_url(self):
@@ -48,4 +50,3 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.name
-

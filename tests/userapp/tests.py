@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """ Test suite for SEO framework.
@@ -14,7 +13,7 @@
     * Random (series of various uncategorised tests)
 
 
-    TESTS TO WRITE: 
+    TESTS TO WRITE:
     To check functionality actually works:
         - south compatibility (changing a definition)
 
@@ -35,6 +34,7 @@
 
 """
 import StringIO
+import hashlib
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -52,7 +52,6 @@ from django.db import IntegrityError, transaction
 from django.core.handlers.wsgi import WSGIRequest
 from django.template import Template, RequestContext, TemplateSyntaxError
 from django.core.cache import cache
-from django.utils.hashcompat import md5_constructor
 from django.utils.encoding import iri_to_uri
 from django.core.management import call_command
 
@@ -76,15 +75,15 @@ class DataSelection(TestCase):
         self.product_content_type = ContentType.objects.get_for_model(Product)
         # NB if signals aren't working, the following will fail.
         self.product_metadata = Coverage._meta.get_model('modelinstance').objects.get(_content_type=self.product_content_type, _object_id=self.product.id)
-        self.product_metadata.title="ModelInstance title"
-        self.product_metadata.keywords="ModelInstance keywords"
+        self.product_metadata.title = "ModelInstance title"
+        self.product_metadata.keywords = "ModelInstance keywords"
         self.product_metadata.save()
 
         self.page = Page.objects.create(title=u"Page Title", type="abc")
         self.page_content_type = ContentType.objects.get_for_model(Page)
         self.page_metadata = Coverage._meta.get_model('modelinstance').objects.get(_content_type=self.page_content_type, _object_id=self.page.id)
-        self.page_metadata.title="Page title"
-        self.page_metadata.keywords="Page keywords"
+        self.page_metadata.title = "Page title"
+        self.page_metadata.keywords = "Page keywords"
         self.page_metadata.save()
 
         # Model metadata
@@ -217,7 +216,7 @@ class DataSelection(TestCase):
 #        self.assertEqual(Redirect.objects.filter(old_path=old_path, new_path=new_path, site=site).count(), 1)
 
     def test_missing_value(self):
-        """ Checks that nothing breaks when no value could be found. 
+        """ Checks that nothing breaks when no value could be found.
             The value should be None, the output blank (if that is appropriate for the field).
         """
         path = "/abc/"
@@ -248,7 +247,7 @@ class DataSelection(TestCase):
         self.assertEqual(metadata.title.value, u"New Title")
 
     def test_useful_error_messages(self):
-        """ Tests that the system gracefully handles a developer error 
+        """ Tests that the system gracefully handles a developer error
             (eg exception in get_absolute_url).
         """
         from django.core.urlresolvers import NoReverseMatch
@@ -317,6 +316,7 @@ class DataSelection(TestCase):
             pass
         else:
             self.fail("AttributeError should be raised on missing FormattedMetadata attribute.")
+
 
 class ValueResolution(TestCase):
     """ Value resolution (unit tests).
@@ -389,6 +389,7 @@ class ValueResolution(TestCase):
         model_md.title = "model title"
         model_md.heading = "model heading"
         model_md.save()
+
         # A convenience function for future checks
         def check_values(title, heading, heading2):
             self.assertEqual(get_metadata(path=path).title.value, title)
@@ -411,7 +412,7 @@ class ValueResolution(TestCase):
 
         path_md.delete()
         check_values("model instance title", "model instance heading", "model instance heading")
-        
+
         modelinstance_md.title = ""
         modelinstance_md.heading = ""
         modelinstance_md.save()
@@ -470,14 +471,14 @@ class Formatting(TestCase):
                 heading     = "The <em>Heading</em>",
                 keywords    = 'Some, keywords", with\n other, chars\'',
                 description = "A \n description with \" interesting\' chars.",
-                raw1        = '<meta name="author" content="seo" /><hr /> ' 
+                raw1        = '<meta name="author" content="seo" /><hr /> '
                               'No text outside tags please.',
                 raw2        = '<meta name="author" content="seo" />'
                               '<script>make_chaos();</script>')
         self.path_metadata.save()
 
         self.metadata = get_metadata(path="/")
-    
+
     def test_html(self):
         """ Tests html generation is performed correctly.
         """
@@ -561,14 +562,14 @@ class Formatting(TestCase):
         self.assertEqual(unicode(metadata.title), exp)
 
     def test_raw1(self):
-        """ Tests that raw fields in head are cleaned correctly. 
+        """ Tests that raw fields in head are cleaned correctly.
         """
         exp = '<meta name="author" content="seo" />'
         self.assertEqual(self.metadata.raw1.value, exp)
         self.assertEqual(unicode(self.metadata.raw1), exp)
 
     def test_raw2(self):
-        """ Tests that raw fields in head are cleaned correctly. 
+        """ Tests that raw fields in head are cleaned correctly.
         """
         exp = '<meta name="author" content="seo" />'
         self.assertEqual(self.metadata.raw2.value, exp)
@@ -666,7 +667,7 @@ class MetaOptions(TestCase):
         """
         if 'dummy' not in settings.CACHE_BACKEND:
             path = '/'
-            hexpath = md5_constructor(iri_to_uri(path)).hexdigest() 
+            hexpath = hashlib.md5(iri_to_uri(path)).hexdigest()
 
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCache"))
@@ -681,7 +682,7 @@ class MetaOptions(TestCase):
         if 'dummy' not in settings.CACHE_BACKEND:
             path = '/'
             site = Site.objects.get_current()
-            hexpath = md5_constructor(iri_to_uri(site.domain+path)).hexdigest()
+            hexpath = hashlib.md5(iri_to_uri(site.domain+path)).hexdigest()
 
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheSites", site=site))
@@ -691,11 +692,11 @@ class MetaOptions(TestCase):
             self.assertEqual(cache.get('rollyourown.seo.WithCacheSites.%s.subtitle' % hexpath), "")
 
     def test_use_cache_i18n(self):
-        """ Checks that the cache plays nicely with i18n. 
+        """ Checks that the cache plays nicely with i18n.
         """
         if 'dummy' not in settings.CACHE_BACKEND:
             path = '/'
-            hexpath = md5_constructor(iri_to_uri(path)).hexdigest()
+            hexpath = hashlib.md5(iri_to_uri(path)).hexdigest()
 
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheI18n", language='de'))
@@ -749,7 +750,7 @@ class Templates(TestCase):
         self.compilesTo("{% get_metadata for obj as var %}{{ var }}", unicode(self.metadata))
 
     def test_for_obj_no_metadata(self):
-        """ Checks that defaults are used when no metadata object (previously) exists. 
+        """ Checks that defaults are used when no metadata object (previously) exists.
             The relevant path is also removed so that the object's link to the database is used.
         """
         self.deregister_alternatives()
@@ -761,21 +762,21 @@ class Templates(TestCase):
         page = Page.objects.create(title=u"Page Title", type="nometadata", content="no meta data")
         content_type = ContentType.objects.get_for_model(Page)
         Metadata.objects.filter(_content_type=content_type, _object_id=page.pk).update(title="Page Title", _path="/different/")
-        
+
         expected_output = '<title>Page Title</title>'
 
         # Check the output of the template is correct when the metadata exists
         self.context = {'obj': page}
         self.compilesTo("{% get_metadata for obj %}", expected_output)
         self.compilesTo("{% get_metadata for obj as var %}{{ var }}", expected_output)
-        self.compilesTo("{% get_metadata for obj as var %}{{ var.populate_from7 }}", 
+        self.compilesTo("{% get_metadata for obj as var %}{{ var.populate_from7 }}",
                 '<populate_from7>model instance content: no meta data</populate_from7>')
 
         # Check the output is correct when there is no metadata
         Metadata.objects.filter(_content_type=content_type, _object_id=page.pk).delete()
         self.compilesTo("{% get_metadata for obj %}", "<title>example.com</title>")
         self.compilesTo("{% get_metadata for obj as var %}{{ var }}", "<title>example.com</title>")
-        self.compilesTo("{% get_metadata for obj as var %}{{ var.populate_from7 }}", 
+        self.compilesTo("{% get_metadata for obj as var %}{{ var.populate_from7 }}",
                 '<populate_from7>model instance content: no meta data</populate_from7>')
 
     def test_for_obj_no_path(self):
@@ -866,23 +867,23 @@ class Templates(TestCase):
         self.compilesTo('{% get_metadata WithI18n in "example.com" %}', "")
 
     def compilesTo(self, input, expected_output):
-        """ Asserts that the given template string compiles to the given output. 
+        """ Asserts that the given template string compiles to the given output.
         """
         input = '{% load seo %}' + input
-        environ = { 
-            'PATH_INFO': self.path, 
+        environ = {
+            'PATH_INFO': self.path,
             'REQUEST_METHOD': 'GET',
             'wsgi.input': FakePayload(''),
-            } 
-        
+        }
+
         # Create a fake request for our purposes
-        request = WSGIRequest(environ) 
-        context= RequestContext(request)
+        request = WSGIRequest(environ)
+        context = RequestContext(request)
         context.update(self.context)
         self.assertEqual(Template(input).render(context).strip(), expected_output.strip())
 
     def deregister_alternatives(self):
-        """ Deregister any alternative metadata classes for the sake of testing. 
+        """ Deregister any alternative metadata classes for the sake of testing.
             This emulates the situation where there is only one metadata definition.
         """
         self._previous_registry = registry.items()
@@ -915,15 +916,15 @@ class Random(TestCase):
         self.context = get_metadata(path=self.model_metadata._path)
 
     def test_default_fallback(self):
-        """ Tests the ability to use the current Site name as a default 
-            fallback. 
+        """ Tests the ability to use the current Site name as a default
+            fallback.
         """
         from django.contrib.sites.models import Site
         site = Site.objects.get_current()
         self.assertEqual(site.name, self.context.title.value)
 
     def test_missing_path(self):
-        " Checks that a model with a missing path is gracefully ignored. "
+        """ Checks that a model with a missing path is gracefully ignored. """
         num_metadata = self.Metadata.objects.all().count()
         try:
             no_path = NoPath.objects.create()
@@ -933,7 +934,7 @@ class Random(TestCase):
         self.assertEqual(num_metadata, new_num_metadata)
 
     def test_syncdb_populate(self):
-        " Checks that syncdb populates the seo metadata. "
+        """ Checks that syncdb populates the seo metadata. """
         Metadata = Coverage._meta.get_model('modelinstance')
         if not Metadata.objects.all():
             raise Exception("Test case requires instances for model instance metadata")
@@ -949,12 +950,10 @@ class Random(TestCase):
         from django.core.management.sql import sql_delete
         from django.db import connection
         from django.core.management.color import no_style
-        from rollyourown.seo import models as seo_models
+        from django.apps import apps
 
-        try:
-            sql_list = sql_delete(seo_models, no_style(), connection) 
-        except TypeError:
-            sql_list = sql_delete(seo_models, no_style())
+        seo_config = apps.get_app_config('seo')
+        sql_list = sql_delete(seo_config, no_style(), connection)
         cursor = connection.cursor()
         try:
             for sql in sql_list:
@@ -963,7 +962,7 @@ class Random(TestCase):
             transaction.rollback_unless_managed()
 
     def test_management_populate(self):
-        " Checks that populate_metadata command adds relevant metadata instances. "
+        """ Checks that populate_metadata command adds relevant metadata instances. """
         Metadata = Coverage._meta.get_model('modelinstance')
         self.page = Page.objects.create(type="def")
 
@@ -993,7 +992,7 @@ class Admin(TestCase):
         self.client.login(username="admin", password="admin")
 
     def test_inline_smoke(self):
-        """ Tests that no error is raised when viewing an inline in the admin. 
+        """ Tests that no error is raised when viewing an inline in the admin.
         """
         path = '/admin/userapp/page/add/'
         try:
@@ -1018,7 +1017,18 @@ class Admin(TestCase):
         try:
             response = self.client.post(path, data, follow=True)
         except Exception, e:
-            raise
+            self.fail(u"Exception raised at '%s': %s" % (path, e))
+        self.assertEqual(response.status_code, 200)
+
+        path = '/admin/seo/coveragemodel/add/'
+        data = {
+            "title": "Testing",
+            "_content_type": u'3',
+        }
+
+        try:
+            response = self.client.post(path, data, follow=True)
+        except Exception, e:
             self.fail(u"Exception raised at '%s': %s" % (path, e))
         self.assertEqual(response.status_code, 200)
 
@@ -1053,17 +1063,3 @@ class Admin(TestCase):
             self.assertContains(response, "seo-coveragemodelinstance-_content_type", status_code=200)
             self.assertNotContains(response, "seo-withsitesmodelinstance-_content_type")
             self.assertContains(response, "seo-withseomodelsmodelinstance-_content_type", status_code=200)
-
-    def test_inline_add(self):
-        path = '/admin/seo/coveragemodel/add/'
-        data = {
-            "title": "Testing",
-            "_content_type": u'3',
-        }
-
-        try:
-            response = self.client.post(path, data, follow=True)
-        except Exception, e:
-            raise
-            self.fail(u"Exception raised at '%s': %s" % (path, e))
-        self.assertEqual(response.status_code, 200)
