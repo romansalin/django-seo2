@@ -430,11 +430,10 @@ class ValueResolution(TestCase):
         """ Checks a conflict between populate_from and model metadata. """
         path = self.page1.get_absolute_url()
         modelinstance_md = self.metadata1
-        model_md = self.model_metadata
 
         self.assertEqual(get_metadata(path=path).populate_from3.value, "efg")
-        model_md.populate_from3 = "not efg"
-        model_md.save()
+        modelinstance_md.populate_from3 = "not efg"
+        modelinstance_md.save()
         self.assertEqual(get_metadata(path=path).populate_from3.value, "not efg")
 
     def test_model_variable_substitution(self):
