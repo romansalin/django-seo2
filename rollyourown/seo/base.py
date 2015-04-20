@@ -90,37 +90,22 @@ class FormattedMetadata(object):
         # Look for a group called "name"
         if name in self.__metadata._meta.groups:
             if value is not None:
-                if value is not None:
-                    value = mark_safe(value)
-
                 return value or None
             value = '\n'.join(unicode(BoundMetadataField(self.__metadata._meta.elements[f], self._resolve_value(f))) for f in self.__metadata._meta.groups[name]).strip()
-
-            if value is not None:
-                value = mark_safe(value)
 
         # Look for an element called "name"
         elif name in self.__metadata._meta.elements:
             if value is not None:
-                if value is not None:
-                    value = mark_safe(value)
                 return BoundMetadataField(self.__metadata._meta.elements[name], value or None)
             value = self._resolve_value(name)
             if cache_key is not None:
                 cache.set(cache_key, value or '')
-
-            if value is not None:
-                value = mark_safe(value)
-
             return BoundMetadataField(self.__metadata._meta.elements[name], value)
         else:
             raise AttributeError
 
         if cache_key is not None:
             cache.set(cache_key, value or '')
-
-        if value is not None:
-            value = mark_safe(value)
 
         return value or None
 
@@ -182,9 +167,9 @@ class MetadataBase(type):
 
         # Collect and sort our elements
         elements = [(key, attrs.pop(key)) for key, obj in attrs.items()
-                                        if isinstance(obj, MetadataField)]
+                    if isinstance(obj, MetadataField)]
         elements.sort(lambda x, y: cmp(x[1].creation_counter,
-                                                y[1].creation_counter))
+                      y[1].creation_counter))
         elements = SortedDict(elements)
 
         # Validation:
