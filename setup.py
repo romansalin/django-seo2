@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from version import get_version
 from setuptools import setup, find_packages
 
 setup(
     name="DjangoSEO",
-    version='1.0',
+    version=get_version(),
     packages=find_packages(exclude=["docs*", "tests*"]),
     namespace_packages=['rollyourown'],
     install_requires=['Django>=1.6'],
