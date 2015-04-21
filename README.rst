@@ -20,7 +20,9 @@ Metadata can be edited in the admin in a centralised place, but also alongside a
 
 This is however a framework, not an app. You therefore have
 complete control over the data you store.
-Here is an example of a definition::
+Here is an example of a definition:
+
+.. code:: python
 
     from rollyourown import seo
 
