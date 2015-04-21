@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-from version import version
 from setuptools import setup, find_packages
+
+from rollyourown import version
+
 
 setup(
     name="DjangoSEO",
     version=version,
     packages=find_packages(exclude=["docs*", "tests*"]),
-    namespace_packages=['rollyourown'],
     install_requires=['Django>=1.6'],
     author="Will Hardy",
     author_email="djangoseo@willhardy.com.au",
