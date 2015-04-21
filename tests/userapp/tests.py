@@ -36,6 +36,7 @@
 import StringIO
 import hashlib
 
+from django import VERSION as DJANGO_VERSION
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 try:
@@ -949,9 +950,13 @@ class Random(TestCase):
         from django.core.management.sql import sql_delete
         from django.db import connection
         from django.core.management.color import no_style
-        from django.apps import apps
 
-        seo_config = apps.get_app_config('seo')
+        if DJANGO_VERSION[:2] >= (1, 7):
+            from django.apps import apps
+            seo_config = apps.get_app_config('seo')
+        else:
+            from rollyourown.seo import models as seo_config
+
         sql_list = sql_delete(seo_config, no_style(), connection)
         cursor = connection.cursor()
         try:

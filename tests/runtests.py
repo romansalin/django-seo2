@@ -2,19 +2,18 @@
 import os
 import sys
 
-import django
-
-os.environ["DJANGO_SETTINGS_MODULE"] = "tests.settings"
 # Setup the path (could have been PYTHONPATH)
 test_dir = os.path.dirname(__file__)
 sys.path.insert(0, test_dir)
 
 
 def runtests():
-    django.setup()
+    os.environ["DJANGO_SETTINGS_MODULE"] = "tests.settings"
+
+    from django.core.wsgi import get_wsgi_application
+    application = get_wsgi_application()
 
     from django.core.management import call_command
-
     result = call_command('test', 'userapp')
     sys.exit(result)
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from collections import OrderedDict
+
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import models
@@ -8,7 +10,6 @@ from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.template import Template, Context
-from django.utils.datastructures import SortedDict
 
 from rollyourown.seo.utils import resolve_to_name, NotSet, Literal
 
@@ -16,7 +17,8 @@ RESERVED_FIELD_NAMES = ('_metadata', '_path', '_content_type', '_object_id',
                         '_content_object', '_view', '_site', 'objects', 
                         '_resolve_value', '_set_context', 'id', 'pk' )
 
-backend_registry = SortedDict()
+backend_registry = OrderedDict()
+
 
 class MetadataBaseModel(models.Model):
 

@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+from collections import OrderedDict
+
 try:
-    from django.db.models.options import get_verbose_name
+    from django.utils.text import camel_case_to_spaces
 except ImportError:
-    from django.utils.text import camel_case_to_spaces as get_verbose_name
+    from django.db.models.options import get_verbose_name as camel_case_to_spaces
 from django.db import models
-from django.utils.datastructures import SortedDict
+
 
 class Options(object):
     def __init__(self, meta, help_text=None):
@@ -22,7 +24,7 @@ class Options(object):
         self._set_seo_models(meta.pop('seo_models', []))
         self.bulk_help_text = help_text
         self.original_meta = meta
-        self.models = SortedDict()
+        self.models = OrderedDict()
         self.name = None
         self.elements = None
         self.metadata = None
@@ -35,7 +37,7 @@ class Options(object):
 
     def _update_from_name(self, name):
         self.name = name
-        self.verbose_name = self.verbose_name or get_verbose_name(name)
+        self.verbose_name = self.verbose_name or camel_case_to_spaces(name)
         self.verbose_name_plural = self.verbose_name_plural or self.verbose_name + 's'
 
     def _register_elements(self, elements):
@@ -79,7 +81,7 @@ class Options(object):
         new_md_meta['unique_together'] = base._meta.unique_together
         new_md_attrs['Meta'] = type("Meta", (), new_md_meta)
         new_md_attrs['_metadata_type'] = backend.name
-        model = type("%s%s"%(self.name,"".join(md_type.split())), (base, self.MetadataBaseModel), new_md_attrs.copy())
+        model = type("%s%s" % (self.name, "".join(md_type.split())), (base, self.MetadataBaseModel), new_md_attrs.copy())
         self.models[backend.name] = model
         # This is a little dangerous, but because we set __module__ to __name__, the model needs tobe accessible here
         globals()[model.__name__] = model

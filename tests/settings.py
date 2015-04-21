@@ -103,6 +103,12 @@ except ImportError:
 
 SEO_MODELS = ('userapp',)
 
+from django import VERSION as DJANGO_VERSION
+if DJANGO_VERSION[:2] >= (1, 7):
+    TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+else:
+    TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+
 try:
     from settings_local import *
 except ImportError:

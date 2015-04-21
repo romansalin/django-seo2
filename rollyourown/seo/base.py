@@ -5,10 +5,10 @@
 #    * Documentation
 #    * Make backends optional: Meta.backends = (path, modelinstance/model, view)
 import hashlib
+from collections import OrderedDict
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.datastructures import SortedDict
 from django.utils.functional import curry
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
@@ -23,7 +23,7 @@ from rollyourown.seo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
 from rollyourown.seo.backends import backend_registry, RESERVED_FIELD_NAMES
 
 
-registry = SortedDict()
+registry = OrderedDict()
 
 
 class FormattedMetadata(object):
@@ -170,12 +170,12 @@ class MetadataBase(type):
                     if isinstance(obj, MetadataField)]
         elements.sort(lambda x, y: cmp(x[1].creation_counter,
                       y[1].creation_counter))
-        elements = SortedDict(elements)
+        elements = OrderedDict(elements)
 
         # Validation:
         # TODO: Write a test framework for seo.Metadata validation
         # Check that no group names clash with element names
-        for key,members in options.groups.items():
+        for key, members in options.groups.items():
             assert key not in elements, "Group name '%s' clashes with field name" % key
             for member in members:
                 assert member in elements, "Group member '%s' is not a valid field" % member
@@ -212,12 +212,10 @@ class MetadataBase(type):
 
         return new_class
 
-
     # TODO: Move this function out of the way (subclasses will want to define their own attributes)
     def _get_formatted_data(cls, path, context=None, site=None, language=None):
         """ Return an object to conveniently access the appropriate values. """
         return FormattedMetadata(cls(), cls._get_instances(path, context, site, language), path, site, language)
-
 
     # TODO: Move this function out of the way (subclasses will want to define their own attributes)
     def _get_instances(cls, path, context=None, site=None, language=None):
@@ -225,7 +223,7 @@ class MetadataBase(type):
             Each instance from each backend is looked up when possible/necessary.
             This is a generator to eliminate unnecessary queries.
         """
-        backend_context = {'view_context': context }
+        backend_context = {'view_context': context}
 
         for model in cls._meta.models.values():
             for instance in model.objects.get_instances(path, site, language, backend_context) or []:
@@ -245,7 +243,7 @@ def _get_metadata_model(name=None):
             return registry[name]
         except KeyError:
             if len(registry) == 1:
-                valid_names = u'Try using the name "%s" or simply leaving it out altogether.'% registry.keys()[0]
+                valid_names = u'Try using the name "%s" or simply leaving it out altogether.' % registry.keys()[0]
             else:
                 valid_names = u"Valid names are " + u", ".join(u'"%s"' % k for k in registry.keys())
             raise Exception(u"Metadata definition with name \"%s\" does not exist.\n%s" % (name, valid_names))
@@ -362,5 +360,3 @@ def register_signals():
             for model in metadata_class._meta.seo_models:
                 models.signals.post_save.connect(update_callback, sender=model, weak=False)
                 models.signals.pre_delete.connect(delete_callback, sender=model, weak=False)
-
-
