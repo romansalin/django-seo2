@@ -184,7 +184,6 @@ class MetadataBase(type):
         for key in elements:
             assert key not in RESERVED_FIELD_NAMES, "Field name '%s' is not allowed" % key
 
-
         # Preprocessing complete, here is the new class
         new_class = type.__new__(cls, name, bases, attrs)
 

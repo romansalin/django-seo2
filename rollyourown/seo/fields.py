@@ -32,7 +32,8 @@ class MetadataField(object):
         self.help_text = help_text
         self.field = field or models.CharField
         self.verbose_name = verbose_name
-        if field_kwargs is None: field_kwargs = {}
+        if field_kwargs is None:
+            field_kwargs = {}
         self.field_kwargs = field_kwargs
 
         if choices and isinstance(choices[0], basestring):

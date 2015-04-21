@@ -55,7 +55,7 @@ class Coverage(seo.Metadata):
         verbose_name = "Basic Metadatum"
         verbose_name_plural = "Basic Metadata"
         use_sites = False
-        groups = { 
+        groups = {
             'advanced': ('raw1', 'raw2'),
             'help_text': ('help_text1', 'help_text2', 'help_text3', 'help_text4',)
         }
