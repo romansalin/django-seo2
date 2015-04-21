@@ -89,6 +89,7 @@ class BaseManager(models.Manager):
             queryset = queryset.filter(_language=language)
         return queryset
 
+
 # Following is part of an incomplete move to define backends, which will:
 #   -  contain the business logic of backends to a short, succinct module
 #   -  allow individual backends to be turned on and off
@@ -115,8 +116,8 @@ class MetadataBackend(object):
     unique_together = None
 
     class __metaclass__(type):
-        def __new__(cls, name, bases, attrs):
-            new_class = type.__new__(cls, name, bases, attrs)
+        def __new__(mcs, name, bases, attrs):
+            new_class = type.__new__(mcs, name, bases, attrs)
             backend_registry[new_class.name] = new_class
             return new_class
 
@@ -329,7 +330,6 @@ class ModelBackend(MetadataBackend):
             raise Exception("Metadata backend 'modelinstance' must be installed in order to use 'model' backend")
 
 
-
 def _resolve(value, model_instance=None, context=None):
     """ Resolves any template references in the given value. 
     """
@@ -341,4 +341,3 @@ def _resolve(value, model_instance=None, context=None):
             context[model_instance._meta.model_name] = model_instance
         value = Template(value).render(context)
     return value
-

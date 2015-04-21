@@ -7,6 +7,7 @@ from django.template import VariableDoesNotExist
 
 register = template.Library()
 
+
 class MetadataNode(template.Node):
     def __init__(self, metadata_name, variable_name, target, site, language):
         self.metadata_name = metadata_name
@@ -81,7 +82,7 @@ def do_get_metadata(parser, token):
     tag_name = bits[0]
     bits = bits[1:]
     metadata_name = None
-    args = { 'as': None, 'for': None, 'in': None, 'on': None }
+    args = {'as': None, 'for': None, 'in': None, 'on': None}
 
     # If there are an even number of bits,
     # a metadata name has been provided.
@@ -97,12 +98,13 @@ def do_get_metadata(parser, token):
         key, value, bits = bits[0], bits[1], bits[2:]
         args[key] = value
 
-    return MetadataNode(metadata_name,
-                variable_name = args['as'],
-                target = args['for'],
-                site = args['on'],
-                language = args['in'])
+    return MetadataNode(
+        metadata_name,
+        variable_name=args['as'],
+        target=args['for'],
+        site=args['on'],
+        language=args['in']
+    )
 
 
 register.tag('get_metadata', do_get_metadata)
-

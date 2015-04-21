@@ -26,7 +26,6 @@ def _syncdb_handler(app, created_models, verbosity, **kwargs):
                     pass
 
 
-
 def populate_all_metadata():
     """ Create metadata instances for all models in seo_models if empty.
         Once you have created a single metadata instance, this will not run.

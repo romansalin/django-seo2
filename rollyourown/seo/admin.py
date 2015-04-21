@@ -12,6 +12,7 @@ from django.utils.text import capfirst
 from rollyourown.seo.utils import get_seo_content_types
 from rollyourown.seo.systemviews import get_seo_views
 
+
 # TODO Use groups as fieldsets
 
 # Varients without sites support
@@ -19,11 +20,14 @@ from rollyourown.seo.systemviews import get_seo_views
 class PathMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path',)
 
+
 class ModelInstanceMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path', '_content_type', '_object_id')
 
+
 class ModelMetadataAdmin(admin.ModelAdmin):
     list_display = ('_content_type',)
+
 
 class ViewMetadataAdmin(admin.ModelAdmin):
     list_display = ('_view', )
@@ -35,13 +39,16 @@ class SitePathMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path', '_site')
     list_filter = ('_site',)
 
+
 class SiteModelInstanceMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path', '_content_type', '_object_id', '_site')
     list_filter = ('_site', '_content_type')
 
+
 class SiteModelMetadataAdmin(admin.ModelAdmin):
     list_display = ('_content_type', '_site')
     list_filter = ('_site',)
+
 
 class SiteViewMetadataAdmin(admin.ModelAdmin):
     list_display = ('_view', '_site')
@@ -123,7 +130,7 @@ def get_inline(metadata_class):
         'ct_field': "_content_type",
         'ct_fk_field': "_object_id",
         'formset': MetadataFormset,
-        }
+    }
     return type('MetadataInline', (generic.GenericStackedInline,), attrs)
 
 
@@ -216,6 +223,7 @@ def _monkey_inline(model, admin_class_instance, metadata_class, inline_class, ad
         if hasattr(admin_class_instance, 'inline_instances'):
             admin_class_instance.inline_instances.append(inline_instance)
 
+
 def _with_inline(func, admin_site, metadata_class, inline_class):
     """ Decorator for register function that adds an appropriate inline."""
 
@@ -226,6 +234,7 @@ def _with_inline(func, admin_site, metadata_class, inline_class):
         _monkey_inline(model_or_iterable, admin_site._registry[model_or_iterable], metadata_class, inline_class, admin_site)
 
     return register
+
 
 def auto_register_inlines(admin_site, metadata_class):
     """ This is a questionable function that automatically adds our metadata
@@ -240,4 +249,3 @@ def auto_register_inlines(admin_site, metadata_class):
     # _with_inline() is a decorator that wraps the register function with the same injection code
     # used above (_monkey_inline).
     admin_site.register = _with_inline(admin_site.register, admin_site, metadata_class, inline_class)
-

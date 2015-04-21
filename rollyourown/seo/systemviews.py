@@ -1,6 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+import importlib
+
+from django.db.models.loading import get_app
+from django.db.models.fields import BLANK_CHOICE_DASH
+from django.db import models
+from django.utils.text import capfirst
+from django.utils.functional import lazy
+from django import forms
+
+from rollyourown.seo.utils import LazyChoices
+
+# help south understand our models
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    pass
+else:
+    add_introspection_rules([], ["^seo\.fields"])
+
+
 def get_seo_views(metadata_class):
     return get_view_names(metadata_class._meta.seo_views)
 
@@ -14,7 +34,6 @@ def get_seo_views(metadata_class):
     #else:
     #    return choices
 
-from django.db.models.loading import get_app
 
 def get_view_names(seo_views):
     output = []
@@ -27,7 +46,7 @@ def get_view_names(seo_views):
             app_name = app.__name__.split(".")[:-1]
             app_name.append("urls")
             try:
-                urls = __import__(".".join(app_name)).urls
+                urls = importlib.import_module(".".join(app_name)).urls
             except (ImportError, AttributeError):
                 output.append(name)
             else:
@@ -36,8 +55,6 @@ def get_view_names(seo_views):
                         output.append(url.name)
     return output
 
-from rollyourown.seo.utils import LazyChoices
-from django.utils.functional import lazy
 
 class SystemViews(LazyChoices):
     def populate(self):
@@ -65,18 +82,16 @@ class SystemViews(LazyChoices):
         self.sort()
 
 
-from django import forms
 class SystemViewChoiceField(forms.TypedChoiceField):
     def _get_choices(self):
         return self._choices
+
     def _set_choices(self, value):
-        self._choices =  self.widget.choices = value
+        self._choices = self.widget.choices = value
+
     choices = property(_get_choices, _set_choices)
 
 
-from django.db.models.fields import BLANK_CHOICE_DASH
-from django.db import models
-from django.utils.text import capfirst
 class SystemViewField(models.CharField):
     def __init__(self, restrict_to, *args, **kwargs):
         self.restrict_to = restrict_to
@@ -111,12 +126,3 @@ class SystemViewField(models.CharField):
                 del kwargs[k]
         defaults.update(kwargs)
         return form_class(**defaults)
-
-
-# help south understand our models
-try:
-    from south.modelsinspector import add_introspection_rules
-except ImportError:
-    pass
-else:
-    add_introspection_rules([], ["^seo\.fields"])

@@ -9,16 +9,23 @@ from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import RegexURLResolver, RegexURLPattern, Resolver404, get_resolver
+
 
 class NotSet(object):
-    " A singleton to identify unset values (where None would have meaning) "
-    def __str__(self): return "NotSet"
-    def __repr__(self): return self.__str__()
+    """ A singleton to identify unset values (where None would have meaning) """
+    def __str__(self):
+        return "NotSet"
+
+    def __repr__(self):
+        return self.__str__()
+
+
 NotSet = NotSet()
 
 
 class Literal(object):
-    " Wrap literal values so that the system knows to treat them that way "
+    """ Wrap literal values so that the system knows to treat them that way """
     def __init__(self, value):
         self.value = value
 
@@ -40,6 +47,7 @@ class LazyList(list):
             # TODO: Test this functionality!
             self.populate = populate_function
         self._populated = False
+
     def _populate(self):
         """ Populate this list by calling populate(), but only once. """
         if not self._populated:
@@ -54,18 +62,23 @@ class LazyList(list):
     def __len__(self):
         self._populate()
         return super(LazyList, self).__len__()
+
     def __getitem__(self, key):
         self._populate()
         return super(LazyList, self).__getitem__(key)
+
     def __setitem__(self, key, value):
         self._populate()
         return super(LazyList, self).__setitem__(key, value)
+
     def __delitem__(self, key):
         self._populate()
         return super(LazyList, self).__delitem__(key)
+
     def __iter__(self):
         self._populate()
         return super(LazyList, self).__iter__()
+
     def __contains__(self, item):
         self._populate()
         return super(LazyList, self).__contains__(item)
@@ -88,8 +101,6 @@ class LazyChoices(LazyList):
             return bool(len(self))
 
 
-from django.core.urlresolvers import RegexURLResolver, RegexURLPattern, Resolver404, get_resolver
-
 def _pattern_resolve_to_name(pattern, path):
     match = pattern.regex.search(path)
     if match:
@@ -101,6 +112,7 @@ def _pattern_resolve_to_name(pattern, path):
         else:
             name = "%s.%s" % (pattern.callback.__module__, pattern.callback.func_name)
         return name
+
 
 def _resolver_resolve_to_name(resolver, path):
     tried = []
@@ -166,9 +178,11 @@ def escape_tags(value, valid_tags):
 def _get_seo_content_types(seo_models):
     """ Returns a list of content types from the models defined in settings (SEO_MODELS) """
     try:
-        return [ ContentType.objects.get_for_model(m).id for m in seo_models ]
+        return [ContentType.objects.get_for_model(m).id for m in seo_models]
     except: # previously caught DatabaseError
         # Return an empty list if this is called too early
         return []
+
+
 def get_seo_content_types(seo_models):
     return lazy(_get_seo_content_types, list)(seo_models)

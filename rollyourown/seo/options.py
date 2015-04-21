@@ -60,12 +60,14 @@ class Options(object):
 
         # 0. Abstract base model with common fields
         base_meta = type('Meta', (), self.original_meta)
+
         class BaseMeta(base_meta):
             abstract = True
             app_label = 'seo'
+
         fields['Meta'] = BaseMeta
         # Do we need this?
-        fields['__module__'] = __name__ #attrs['__module__']
+        fields['__module__'] = __name__ # attrs['__module__']
         self.MetadataBaseModel = type('%sBase' % self.name, (models.Model,), fields)
 
     def _add_backend(self, backend):
@@ -73,7 +75,7 @@ class Options(object):
         md_type = backend.verbose_name
         base = backend().get_model(self)
         # TODO: Rename this field
-        new_md_attrs = {'_metadata': self.metadata, '__module__': __name__ }
+        new_md_attrs = {'_metadata': self.metadata, '__module__': __name__}
 
         new_md_meta = {}
         new_md_meta['verbose_name'] = '%s (%s)' % (self.verbose_name, md_type)
@@ -101,5 +103,3 @@ class Options(object):
                     seo_models.extend(models.get_models(app))
 
         self.seo_models = seo_models
-
-
