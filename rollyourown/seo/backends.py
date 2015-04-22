@@ -15,7 +15,7 @@ from rollyourown.seo.utils import resolve_to_name, NotSet, Literal
 
 RESERVED_FIELD_NAMES = ('_metadata', '_path', '_content_type', '_object_id',
                         '_content_object', '_view', '_site', 'objects', 
-                        '_resolve_value', '_set_context', 'id', 'pk' )
+                        '_resolve_value', '_set_context', 'id', 'pk')
 
 backend_registry = OrderedDict()
 
@@ -287,7 +287,7 @@ class ModelBackend(MetadataBackend):
 
     def get_model(self, options):
         class ModelMetadataBase(MetadataBaseModel):
-            _content_type = models.ForeignKey(ContentType)
+            _content_type = models.ForeignKey(ContentType, verbose_name=_("model"))
             if options.use_sites:
                 _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))
             if options.use_i18n:

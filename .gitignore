@@ -1,5 +1,6 @@
 *.pyc
 *.swp
+/dist/
 /build/
 docs/_build
 .coverage

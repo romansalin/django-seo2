@@ -69,26 +69,36 @@ def register_seo_admin(admin_site, metadata_class):
         model_admin = ModelMetadataAdmin
         view_admin = ViewMetadataAdmin
 
+    def get_list_display():
+        return tuple(name for name, obj in metadata_class._meta.elements.items() if obj.editable)
+
     backends = metadata_class._meta.backends
 
     if 'model' in backends:
         class ModelAdmin(model_admin):
             form = get_model_form(metadata_class)
+            list_display = model_admin.list_display + get_list_display()
+
         _register_admin(admin_site, metadata_class._meta.get_model('model'), ModelAdmin)
 
     if 'view' in backends:
         class ViewAdmin(view_admin):
             form = get_view_form(metadata_class)
+            list_display = view_admin.list_display + get_list_display()
+
         _register_admin(admin_site, metadata_class._meta.get_model('view'), ViewAdmin)
 
     if 'path' in backends:
         class PathAdmin(path_admin):
             form = get_path_form(metadata_class)
+            list_display = path_admin.list_display + get_list_display()
+
         _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmin)
 
     if 'modelinstance' in backends:
         class ModelInstanceAdmin(model_instance_admin):
-            pass
+            list_display = model_instance_admin.list_display + get_list_display()
+
         _register_admin(admin_site, metadata_class._meta.get_model('modelinstance'), ModelInstanceAdmin)
 
 
