@@ -22,7 +22,7 @@ class PathMetadataAdmin(admin.ModelAdmin):
 
 
 class ModelInstanceMetadataAdmin(admin.ModelAdmin):
-    list_display = ('_path', '_content_type', '_object_id')
+    list_display = ('_content_type', '_object_id', '_path')
 
 
 class ModelMetadataAdmin(admin.ModelAdmin):
