@@ -79,7 +79,7 @@ class MetadataField(object):
         if self.help_text:
             kwargs.setdefault('help_text', self.help_text)
         if self.verbose_name:
-            kwargs.setdefault('verbose_name', self.help_text)
+            kwargs.setdefault('verbose_name', self.verbose_name)
         return self.field(**kwargs)
 
     def clean(self, value):
