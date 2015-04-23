@@ -240,9 +240,9 @@ class ModelInstanceBackend(MetadataBackend):
 
     def get_model(self, options):
         class ModelInstanceMetadataBase(MetadataBaseModel):
-            _path = models.CharField(_('path'), max_length=255, editable=False, unique=not (options.use_sites or options.use_i18n))
-            _content_type = models.ForeignKey(ContentType, editable=False)
-            _object_id = models.PositiveIntegerField(editable=False)
+            _path = models.CharField(_('path'), max_length=255, blank=True, editable=False, unique=not (options.use_sites or options.use_i18n))
+            _content_type = models.ForeignKey(ContentType, verbose_name=_("model"))
+            _object_id = models.PositiveIntegerField(verbose_name=_("object ID"))
             _content_object = generic.GenericForeignKey('_content_type', '_object_id')
             if options.use_sites:
                 _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))

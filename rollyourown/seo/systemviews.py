@@ -51,7 +51,7 @@ def get_view_names(seo_views):
                 output.append(name)
             else:
                 for url in urls.urlpatterns:
-                    if url.name:
+                    if getattr(url, 'name', None):
                         output.append(url.name)
     return output
 
