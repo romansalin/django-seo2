@@ -4,6 +4,7 @@
 from collections import OrderedDict
 
 from django.utils.translation import ugettext_lazy as _
+from django.db.utils import IntegrityError
 from django.conf import settings
 from django.db import models
 from django.contrib.sites.models import Site
@@ -271,7 +272,10 @@ class ModelInstanceBackend(MetadataBackend):
                     pass
                 else:
                     self._path = path_func()
-                super(ModelInstanceMetadataBase, self).save(*args, **kwargs)
+                try:
+                    super(ModelInstanceMetadataBase, self).save(*args, **kwargs)
+                except IntegrityError:
+                    pass
 
         return ModelInstanceMetadataBase
 

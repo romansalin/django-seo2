@@ -18,7 +18,6 @@ from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
 from django.db.utils import DatabaseError
 
-from rollyourown.seo import models as seo_models
 from rollyourown.seo.utils import NotSet, Literal
 from rollyourown.seo.options import Options
 from rollyourown.seo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
@@ -327,7 +326,6 @@ def create_metadata_instance(metadata_class, instance):
 def populate_metadata(model, MetadataClass):
     """ For a given model and metadata class, ensure there is metadata for every instance.
     """
-    content_type = ContentType.objects.get_for_model(model)
     for instance in model.objects.all():
         create_metadata_instance(MetadataClass, instance)
 
