@@ -20,18 +20,22 @@ from rollyourown.seo.systemviews import get_seo_views
 
 class PathMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path',)
+    search_fields = ('_path',)
 
 
 class ModelInstanceMetadataAdmin(admin.ModelAdmin):
     list_display = ('_content_type', '_object_id', '_path')
+    search_fields = ('_path', '_content_type__name')
 
 
 class ModelMetadataAdmin(admin.ModelAdmin):
     list_display = ('_content_type',)
+    search_fields = ('_content_type__name',)
 
 
 class ViewMetadataAdmin(admin.ModelAdmin):
     list_display = ('_view', )
+    search_fields = ('_view',)
 
 
 # Varients with sites support
@@ -39,21 +43,25 @@ class ViewMetadataAdmin(admin.ModelAdmin):
 class SitePathMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path', '_site')
     list_filter = ('_site',)
+    search_fields = ('_path',)
 
 
 class SiteModelInstanceMetadataAdmin(admin.ModelAdmin):
     list_display = ('_path', '_content_type', '_object_id', '_site')
     list_filter = ('_site', '_content_type')
+    search_fields = ('_path', '_content_type__name')
 
 
 class SiteModelMetadataAdmin(admin.ModelAdmin):
     list_display = ('_content_type', '_site')
     list_filter = ('_site',)
+    search_fields = ('_content_type__name',)
 
 
 class SiteViewMetadataAdmin(admin.ModelAdmin):
     list_display = ('_view', '_site')
     list_filter = ('_site',)
+    search_fields = ('_view',)
 
 
 def register_seo_admin(admin_site, metadata_class):
