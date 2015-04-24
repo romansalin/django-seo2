@@ -942,9 +942,7 @@ class Random(TestCase):
             obj.delete()
 
         self.assertEqual(Metadata.objects.count(), 0)
-
-        call_command('makemigrations', 'seo', verbosity=0)
-        call_command('migrate', 'seo', fake=True, verbosity=0)
+        call_command('migrate', fake=True, verbosity=0)
 
         if not Metadata.objects.all():
             self.fail("No metadata objects created.")
@@ -968,14 +966,6 @@ class Random(TestCase):
         full_metadata = Metadata.objects.count()
         if full_metadata < existing_metadata:
             self.fail("No metadata objects created.")
-
-    def tearDown(self):
-        if 'rollyourown.seo.migrations' in sys.modules:
-            del sys.modules['rollyourown.seo.migrations']
-
-        migration_dirs = os.path.join('rollyourown', 'seo', 'migrations')
-        if os.path.exists(migration_dirs):
-            shutil.rmtree(migration_dirs)
 
 
 class Admin(TestCase):
