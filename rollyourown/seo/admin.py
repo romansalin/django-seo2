@@ -79,7 +79,8 @@ def register_seo_admin(admin_site, metadata_class):
         view_admin = ViewMetadataAdmin
 
     def get_list_display():
-        return tuple(name for name, obj in metadata_class._meta.elements.items() if obj.editable)
+        return tuple(name for name, obj in metadata_class._meta.elements.items()
+                     if obj.editable)
 
     backends = metadata_class._meta.backends
 
@@ -106,6 +107,7 @@ def register_seo_admin(admin_site, metadata_class):
 
     if 'modelinstance' in backends:
         class ModelInstanceAdmin(model_instance_admin):
+            form = get_modelinstance_form(metadata_class)
             list_display = model_instance_admin.list_display + get_list_display()
 
         _register_admin(admin_site, metadata_class._meta.get_model('modelinstance'), ModelInstanceAdmin)
@@ -158,14 +160,17 @@ def get_model_form(metadata_class):
 
     # Restrict content type choices to the models set in seo_models
     content_types = get_seo_content_types(metadata_class._meta.seo_models)
-    content_type_choices = [(x._get_pk_val(), smart_unicode(x)) for x in ContentType.objects.filter(id__in=content_types)]
+    content_type_choices = [(x._get_pk_val(), smart_unicode(x)) for x in
+                            ContentType.objects.filter(id__in=content_types)]
 
     # Get a list of fields, with _content_type at the start
     important_fields = ['_content_type'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class, exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(model_class,
+                                                  exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
-        _content_type = forms.ChoiceField(label=capfirst(_("model")), choices=content_type_choices)
+        _content_type = forms.ChoiceField(label=capfirst(_("model")),
+                                          choices=content_type_choices)
 
         class Meta:
             model = model_class
@@ -181,12 +186,40 @@ def get_model_form(metadata_class):
     return ModelMetadataForm
 
 
+def get_modelinstance_form(metadata_class):
+    model_class = metadata_class._meta.get_model('modelinstance')
+
+    # Restrict content type choices to the models set in seo_models
+    content_types = get_seo_content_types(metadata_class._meta.seo_models)
+
+    # Get a list of fields, with _content_type at the start
+    important_fields = ['_content_type'] + ['_object_id'] + core_choice_fields(metadata_class)
+    _fields = important_fields + fields_for_model(model_class,
+                                                  exclude=important_fields).keys()
+
+    class ModelMetadataForm(forms.ModelForm):
+        _content_type = forms.ModelChoiceField(
+            queryset=ContentType.objects.filter(id__in=content_types),
+            empty_label=None,
+            label=capfirst(_("model")),
+        )
+
+        _object_id = forms.IntegerField(label=capfirst(_("object ID")))
+
+        class Meta:
+            model = model_class
+            fields = _fields
+
+    return ModelMetadataForm
+
+
 def get_path_form(metadata_class):
     model_class = metadata_class._meta.get_model('path')
 
     # Get a list of fields, with _view at the start
     important_fields = ['_path'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class, exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(model_class,
+                                                  exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
         class Meta:
@@ -205,10 +238,12 @@ def get_view_form(metadata_class):
 
     # Get a list of fields, with _view at the start
     important_fields = ['_view'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class, exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(model_class,
+                                                  exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
-        _view = forms.ChoiceField(label=capfirst(_("view")), choices=view_choices, required=False)
+        _view = forms.ChoiceField(label=capfirst(_("view")),
+                                  choices=view_choices, required=False)
 
         class Meta:
             model = model_class
@@ -250,7 +285,8 @@ def _with_inline(func, admin_site, metadata_class, inline_class):
         # Call the (bound) function we were given.
         # We have to assume it will be bound to admin_site
         func(model_or_iterable, admin_class, **options)
-        _monkey_inline(model_or_iterable, admin_site._registry[model_or_iterable], metadata_class, inline_class, admin_site)
+        _monkey_inline(model_or_iterable, admin_site._registry[model_or_iterable],
+                       metadata_class, inline_class, admin_site)
 
     return register
 
