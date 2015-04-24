@@ -8,6 +8,7 @@ coverage/*
 test.db
 rollyourown/seo/kogan.py
 tests/settings_local.py
+/migrations/
 *.egg-info
 *.egg
 .DS_Store
