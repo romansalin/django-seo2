@@ -3,6 +3,8 @@
 
 from collections import OrderedDict
 
+from django.apps import apps
+
 try:
     from django.utils.text import camel_case_to_spaces
 except ImportError:
@@ -94,12 +96,12 @@ class Options(object):
         for model_name in value:
             if "." in model_name:
                 app_label, model_name = model_name.split(".", 1)
-                model = models.get_model(app_label, model_name)
+                model = apps.get_model(app_label, model_name)
                 if model:
                     seo_models.append(model)
             else:
-                app = models.get_app(model_name)
+                app = apps.get_app_config(model_name).models_module
                 if app:
-                    seo_models.extend(models.get_models(app))
+                    seo_models.extend(apps.get_models(app))
 
         self.seo_models = seo_models

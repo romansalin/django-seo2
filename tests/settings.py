@@ -94,20 +94,9 @@ CACHE_BACKEND = 'dummy://'
 # Enable when testing cache
 #CACHE_BACKEND = "locmem://?timeout=30&max_entries=400"
 
-# If south is available, add it
-try:
-    import south
-    INSTALLED_APPS += ('south',)
-except ImportError:
-    pass
-
 SEO_MODELS = ('userapp',)
 
-from django import VERSION as DJANGO_VERSION
-if DJANGO_VERSION[:2] >= (1, 7):
-    TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-else:
-    TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 try:
     from settings_local import *

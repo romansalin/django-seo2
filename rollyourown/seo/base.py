@@ -16,7 +16,9 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
+from django.db.utils import DatabaseError
 
+from rollyourown.seo import models as seo_models
 from rollyourown.seo.utils import NotSet, Literal
 from rollyourown.seo.options import Options
 from rollyourown.seo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
@@ -346,6 +348,35 @@ def _update_callback(model_class, sender, instance, created, **kwargs):
 def _delete_callback(model_class, sender, instance,  **kwargs):
     content_type = ContentType.objects.get_for_model(instance)
     model_class.objects.filter(_content_type=content_type, _object_id=instance.pk).delete()
+
+
+def _populate_metadata_handler(verbosity, **kwargs):
+    for metadata in registry.values():
+        instance_metadata = metadata._meta.get_model('modelinstance')
+        if instance_metadata is not None:
+            for model in metadata._meta.seo_models:
+                content_type = ContentType.objects.get_for_model(model)
+                if instance_metadata.objects.filter(_content_type=content_type):
+                    continue
+                if verbosity > 0:
+                    print("Populating %s for %s.%s"
+                          % (metadata._meta.verbose_name_plural,
+                             model._meta.app_label,
+                             model._meta.object_name))
+                try:
+                    populate_metadata(model, instance_metadata)
+                except DatabaseError as err:
+                    print ("Database Error (%s) when trying to populate %s "
+                           "for %s.%s. Ignoring (as assumed that this is "
+                           "a migration related issue)"
+                           % (str(err),
+                              metadata._meta.verbose_name_plural,
+                              model._meta.app_label,
+                              model._meta.object_name))
+
+
+def migrate_handler(sender, verbosity, **kwargs):
+    _populate_metadata_handler(verbosity, **kwargs)
 
 
 def register_signals():

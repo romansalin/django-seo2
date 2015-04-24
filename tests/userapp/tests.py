@@ -14,9 +14,6 @@
 
 
     TESTS TO WRITE:
-    To check functionality actually works:
-        - south compatibility (changing a definition)
-
     For better coverage:
         - valid_tags given as a string
         - Meta.seo_models = appname.modelname (ie with a dot)
@@ -36,7 +33,6 @@
 import StringIO
 import hashlib
 
-from django import VERSION as DJANGO_VERSION
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 try:
@@ -49,7 +45,7 @@ from django.contrib.sites.models import Site
 from django.contrib.redirects.models import Redirect
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError, transaction, OperationalError
 from django.core.handlers.wsgi import WSGIRequest
 from django.template import Template, RequestContext, TemplateSyntaxError
 from django.core.cache import cache
@@ -933,37 +929,27 @@ class Random(TestCase):
         new_num_metadata = self.Metadata.objects.all().count()
         self.assertEqual(num_metadata, new_num_metadata)
 
-    def test_syncdb_populate(self):
-        """ Checks that syncdb populates the seo metadata. """
+    def test_migrate_populate(self):
+        """ Checks that migrate populates the seo metadata. """
         Metadata = Coverage._meta.get_model('modelinstance')
         if not Metadata.objects.all():
             raise Exception("Test case requires instances for model instance metadata")
 
         self.remove_seo_tables()
 
-        call_command('syncdb', interactive=False, verbosity=0)
+        call_command('makemigrations', 'seo', verbosity=0)
+        call_command('migrate', 'seo', verbosity=0)
 
         if not Metadata.objects.all():
             self.fail("No metadata objects created.")
 
     def remove_seo_tables(self):
-        from django.core.management.sql import sql_delete
-        from django.db import connection
-        from django.core.management.color import no_style
-
-        if DJANGO_VERSION[:2] >= (1, 7):
-            from django.apps import apps
-            seo_config = apps.get_app_config('seo')
-        else:
-            from rollyourown.seo import models as seo_config
-
-        sql_list = sql_delete(seo_config, no_style(), connection)
-        cursor = connection.cursor()
         try:
-            for sql in sql_list:
-                cursor.execute(sql)
-        except Exception, e:
-            transaction.rollback_unless_managed()
+            call_command('migrate', 'seo', 'zero', verbosity=0)
+        except OperationalError:
+            pass
+        else:
+            print("True")
 
     def test_management_populate(self):
         """ Checks that populate_metadata command adds relevant metadata instances. """

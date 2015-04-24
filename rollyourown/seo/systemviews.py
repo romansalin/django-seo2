@@ -3,7 +3,7 @@
 
 import importlib
 
-from django.db.models.loading import get_app
+from django.apps import apps
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.db import models
 from django.utils.text import capfirst
@@ -11,14 +11,6 @@ from django.utils.functional import lazy
 from django import forms
 
 from rollyourown.seo.utils import LazyChoices
-
-# help south understand our models
-try:
-    from south.modelsinspector import add_introspection_rules
-except ImportError:
-    pass
-else:
-    add_introspection_rules([], ["^seo\.fields"])
 
 
 def get_seo_views(metadata_class):
@@ -39,7 +31,7 @@ def get_view_names(seo_views):
     output = []
     for name in seo_views:
         try:
-            app = get_app(name)
+            app = apps.get_app_config(name).models_module
         except:
             output.append(name)
         else:

@@ -27,7 +27,7 @@ Create a file ``seo.py`` in any app, with the following simple definition:
         keywords    = seo.KeywordTag()
         heading     = seo.Tag(name="h1")
 
-Run ``syncdb``
+Run ``migrate``
 
 Step Three: Admin
 -----------------

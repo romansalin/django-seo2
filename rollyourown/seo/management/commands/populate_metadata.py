@@ -1,15 +1,30 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 from django.core.management.base import BaseCommand, CommandError
-from rollyourown.seo.management import populate_all_metadata
+
+from rollyourown.seo.base import registry, populate_metadata
 
 
 class Command(BaseCommand):
     help = "Populate the database with metadata instances for all models listed in seo_models."
 
+    @staticmethod
+    def populate_all_metadata():
+        """ Create metadata instances for all models in seo_models if empty.
+            Once you have created a single metadata instance, this will not run.
+            This is because it is a potentially slow operation that need only be
+            done once. If you want to ensure that everything is populated, run the
+            populate_metadata management command.
+        """
+        for Metadata in registry.values():
+            InstanceMetadata = Metadata._meta.get_model('modelinstance')
+            if InstanceMetadata is not None:
+                for model in Metadata._meta.seo_models:
+                    populate_metadata(model, InstanceMetadata)
+
     def handle(self, *args, **options):
         if len(args) > 0:
             raise CommandError("This command currently takes no arguments")
 
-        populate_all_metadata()
+        self.populate_all_metadata()

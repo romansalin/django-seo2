@@ -10,7 +10,7 @@ setup(
     name="DjangoSEO",
     version=version,
     packages=find_packages(exclude=["docs*", "tests*"]),
-    install_requires=['Django>=1.6'],
+    install_requires=['Django>=1.7'],
     author="Will Hardy",
     author_email="djangoseo@willhardy.com.au",
     description="A framework for managing SEO metadata in Django.",

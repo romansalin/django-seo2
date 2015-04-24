@@ -37,7 +37,7 @@ Done! The above definition outlines four fields:
 - A ``<meta>`` tag for keywords. (you could also use ``seo.MetaTag``).
 - A ``<h1>`` tag for headings, which does not appear in the document head.
 
-If you run syncdb you will also notice that four new models are created:
+If you run migrate you will also notice that four new models are created:
 
 - One to attach the metadata to paths
 - One to attach the metadata to model instances
