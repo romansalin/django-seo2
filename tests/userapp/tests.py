@@ -32,9 +32,6 @@
 """
 import StringIO
 import hashlib
-import os
-import sys
-import shutil
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
