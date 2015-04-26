@@ -929,21 +929,6 @@ class Random(TestCase):
         new_num_metadata = self.Metadata.objects.all().count()
         self.assertEqual(num_metadata, new_num_metadata)
 
-    def test_migrate_populate(self):
-        """ Checks that migrate populates the seo metadata. """
-        Metadata = Coverage._meta.get_model('modelinstance')
-        if not Metadata.objects.all():
-            raise Exception("Test case requires instances for model instance metadata")
-
-        for obj in Metadata.objects.all():
-            obj.delete()
-
-        self.assertEqual(Metadata.objects.count(), 0)
-        call_command('migrate', fake=True, verbosity=0)
-
-        if not Metadata.objects.all():
-            self.fail("No metadata objects created.")
-
     def test_management_populate(self):
         """ Checks that populate_metadata command adds relevant metadata instances. """
         Metadata = Coverage._meta.get_model('modelinstance')
