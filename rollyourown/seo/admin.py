@@ -204,7 +204,7 @@ def get_modelinstance_form(metadata_class):
             label=capfirst(_("model")),
         )
 
-        _object_id = forms.IntegerField(label=capfirst(_("object ID")))
+        _object_id = forms.IntegerField(label=capfirst(_("ID")))
 
         class Meta:
             model = model_class

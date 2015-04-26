@@ -40,9 +40,11 @@ class FormattedMetadata(object):
             else:
                 hexpath = hashlib.md5(iri_to_uri(path)).hexdigest()
             if metadata._meta.use_i18n:
-                self.__cache_prefix = 'rollyourown.seo.%s.%s.%s' % (self.__metadata.__class__.__name__, hexpath, language)
+                self.__cache_prefix = 'rollyourown.seo.%s.%s.%s' % (
+                    self.__metadata.__class__.__name__, hexpath, language)
             else:
-                self.__cache_prefix = 'rollyourown.seo.%s.%s' % (self.__metadata.__class__.__name__, hexpath)
+                self.__cache_prefix = 'rollyourown.seo.%s.%s' % (
+                    self.__metadata.__class__.__name__, hexpath)
         else:
             self.__cache_prefix = None
         self.__instances_original = instances
@@ -92,7 +94,8 @@ class FormattedMetadata(object):
         if name in self.__metadata._meta.groups:
             if value is not None:
                 return value or None
-            value = '\n'.join(unicode(BoundMetadataField(self.__metadata._meta.elements[f], self._resolve_value(f))) for f in self.__metadata._meta.groups[name]).strip()
+            value = '\n'.join(unicode(BoundMetadataField(self.__metadata._meta.elements[f], self._resolve_value(f)))
+                              for f in self.__metadata._meta.groups[name]).strip()
 
         # Look for an element called "name"
         elif name in self.__metadata._meta.elements:
@@ -118,7 +121,8 @@ class FormattedMetadata(object):
             value = None
 
         if value is None:
-            value = mark_safe(u'\n'.join(unicode(getattr(self, f)) for f,e in self.__metadata._meta.elements.items() if e.head))
+            value = mark_safe(u'\n'.join(unicode(getattr(self, f)) for f, e in
+                                         self.__metadata._meta.elements.items() if e.head))
             if self.__cache_prefix is not None:
                 cache.set(self.__cache_prefix, value or '')
 
@@ -318,7 +322,8 @@ def create_metadata_instance(metadata_class, instance):
     # If the path-based search didn't work, look for (or create) an existing
     # instance linked to this object.
     if not metadata:
-        metadata, md_created = metadata_class.objects.get_or_create(_content_type=content_type, _object_id=instance.pk)
+        metadata, md_created = metadata_class.objects.get_or_create(
+            _content_type=content_type, _object_id=instance.pk)
         metadata._path = path
         metadata.save()
 
@@ -348,35 +353,6 @@ def _delete_callback(model_class, sender, instance,  **kwargs):
     model_class.objects.filter(_content_type=content_type, _object_id=instance.pk).delete()
 
 
-def _populate_metadata_handler(verbosity, **kwargs):
-    for metadata in registry.values():
-        instance_metadata = metadata._meta.get_model('modelinstance')
-        if instance_metadata is not None:
-            for model in metadata._meta.seo_models:
-                content_type = ContentType.objects.get_for_model(model)
-                if instance_metadata.objects.filter(_content_type=content_type):
-                    continue
-                if verbosity > 0:
-                    print("Populating %s for %s.%s"
-                          % (metadata._meta.verbose_name_plural,
-                             model._meta.app_label,
-                             model._meta.object_name))
-                try:
-                    populate_metadata(model, instance_metadata)
-                except DatabaseError as err:
-                    print ("Database Error (%s) when trying to populate %s "
-                           "for %s.%s. Ignoring (as assumed that this is "
-                           "a migration related issue)"
-                           % (str(err),
-                              metadata._meta.verbose_name_plural,
-                              model._meta.app_label,
-                              model._meta.object_name))
-
-
-def migrate_handler(sender, verbosity, **kwargs):
-    _populate_metadata_handler(verbosity, **kwargs)
-
-
 def register_signals():
     for metadata_class in registry.values():
         model_instance = metadata_class._meta.get_model('modelinstance')
@@ -386,5 +362,6 @@ def register_signals():
 
             ## Connect the models listed in settings to the update callback.
             for model in metadata_class._meta.seo_models:
+                # TODO Currently it's not needed to create metadata for new instance
                 models.signals.post_save.connect(update_callback, sender=model, weak=False)
                 models.signals.pre_delete.connect(delete_callback, sender=model, weak=False)

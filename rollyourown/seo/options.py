@@ -56,8 +56,7 @@ class Options(object):
             if obj.editable:
                 field = obj.get_field()
                 if not field.help_text:
-                    if key in self.bulk_help_text:
-                        field.help_text = self.bulk_help_text[key]
+                    field.help_text = self.bulk_help_text.get(key)
                 fields[key] = field
 
         # 0. Abstract base model with common fields

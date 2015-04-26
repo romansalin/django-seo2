@@ -3,8 +3,6 @@
 import logging
 import re
 
-from django.conf import settings
-from django.db import models
 from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
@@ -157,8 +155,11 @@ def escape_tags(value, valid_tags):
             So if you use valid_tags, you still need to trust your data entry.
             Or we could try:
               - only escape the non matching bits
-              - use BeautifulSoup to understand the elements, escape everything else and remove potentially harmful attributes (onClick).
-              - Remove this feature entirely. Half-escaping things securely is very difficult, developers should not be lured into a false sense of security.
+              - use BeautifulSoup to understand the elements, escape everything
+                else and remove potentially harmful attributes (onClick).
+              - Remove this feature entirely. Half-escaping things securely is
+                very difficult, developers should not be lured into a false
+                sense of security.
     """
     # 1. escape everything
     value = conditional_escape(value)
@@ -166,7 +167,8 @@ def escape_tags(value, valid_tags):
     # 2. Reenable certain tags
     if valid_tags:
         # TODO: precompile somewhere once?
-        tag_re = re.compile(r'&lt;(\s*/?\s*(%s))(.*?\s*)&gt;' % u'|'.join(re.escape(tag) for tag in valid_tags))
+        tag_re = re.compile(r'&lt;(\s*/?\s*(%s))(.*?\s*)&gt;' %
+                            u'|'.join(re.escape(tag) for tag in valid_tags))
         value = tag_re.sub(_replace_quot, value)
 
     # Allow comments to be hidden
@@ -176,7 +178,9 @@ def escape_tags(value, valid_tags):
 
 
 def _get_seo_content_types(seo_models):
-    """ Returns a list of content types from the models defined in settings (SEO_MODELS) """
+    """ Returns a list of content types from the models defined in settings
+    (SEO_MODELS)
+    """
     try:
         return [ContentType.objects.get_for_model(m).id for m in seo_models]
     except: # previously caught DatabaseError
