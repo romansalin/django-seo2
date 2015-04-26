@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import warnings
+
 from django.core.management.base import BaseCommand, CommandError
 
 from rollyourown.seo.base import registry, populate_metadata
@@ -24,6 +26,9 @@ class Command(BaseCommand):
                     populate_metadata(model, InstanceMetadata)
 
     def handle(self, *args, **options):
+        warnings.warn("This is deprecated command. It's not necessary yet and "
+                      "potentially slow.", DeprecationWarning, stacklevel=2)
+
         if len(args) > 0:
             raise CommandError("This command currently takes no arguments")
 

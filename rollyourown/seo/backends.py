@@ -71,6 +71,17 @@ class MetadataBaseModel(models.Model):
     def _populate_from_kwargs(self):
         return {}
 
+    @staticmethod
+    def _resolve_template(value, model_instance=None, context=None):
+        """ Resolves any template references in the given value. """
+        if isinstance(value, basestring) and "{" in value:
+            if context is None:
+                context = Context()
+            if model_instance is not None:
+                context[model_instance._meta.model_name] = model_instance
+            value = Template(value).render(context)
+        return value
+
 
 class BaseManager(models.Manager):
     def on_current_site(self, site=None):
@@ -97,18 +108,26 @@ class BaseManager(models.Manager):
 #   -  allow new backends to be added by end developers
 #
 # A Backend:
-#   -  defines an abstract base class for storing the information required to associate metadata with its target (ie a view, a path, a model instance etc)
+#   -  defines an abstract base class for storing the information required to
+#      associate metadata with its target (ie a view, a path, a model instance etc)
 #   -  defines a method for retrieving an instance
 #
 # This is not particularly easy.
-#   -  unique_together fields need to be defined in the same django model, as some django versions don't enforce the uniqueness when it spans subclasses
-#   -  most backends use the path to find a matching instance. The model backend however ideally needs a content_type (found from a model instance backend, which used the path)
-#   -  catering for all the possible options (use_sites, use_languages), needs to be done succiently, and at compile time
+#   -  unique_together fields need to be defined in the same django model, as
+#      some django versions don't enforce the uniqueness when it spans subclasses
+#   -  most backends use the path to find a matching instance. The model
+#      backend however ideally needs a content_type (found from a model instance
+#      backend, which used the path)
+#   -  catering for all the possible options (use_sites, use_languages), needs
+#      to be done succiently, and at compile time
 #
 # This means that:
-#   -  all fields that share uniqueness (backend fields, _site, _language) need to be defined in the same model
-#   -  as backends should have full control over the model, therefore every backend needs to define the compulsory fields themselves (eg _site and _language).
-#      There is no way to add future compulsory fields to all backends without editing each backend individually. 
+#   -  all fields that share uniqueness (backend fields, _site, _language) need
+#      to be defined in the same model
+#   -  as backends should have full control over the model, therefore every
+#      backend needs to define the compulsory fields themselves (eg _site and _language).
+#      There is no way to add future compulsory fields to all backends without
+#      editing each backend individually.
 #      This is probably going to have to be a limitataion we need to live with.
 
 class MetadataBackend(object):
@@ -166,11 +185,30 @@ class PathBackend(MetadataBackend):
 
     def get_model(self, options):
         class PathMetadataBase(MetadataBaseModel):
-            _path = models.CharField(_('path'), max_length=255, unique=not (options.use_sites or options.use_i18n))
+            _path = models.CharField(
+                _('path'),
+                max_length=255,
+                unique=not (options.use_sites or options.use_i18n)
+            )
+
             if options.use_sites:
-                _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))
+                _site = models.ForeignKey(
+                    Site,
+                    null=True,
+                    blank=True,
+                    verbose_name=_("site")
+                )
+
             if options.use_i18n:
-                _language = models.CharField(_("language"), max_length=5, null=True, blank=True, db_index=True, choices=settings.LANGUAGES)
+                _language = models.CharField(
+                    _("language"),
+                    max_length=5,
+                    null=True,
+                    blank=True,
+                    db_index=True,
+                    choices=settings.LANGUAGES
+                )
+
             objects = self.get_manager(options)()
 
             def __unicode__(self):
@@ -199,17 +237,39 @@ class ViewBackend(MetadataBackend):
 
     def get_model(self, options):
         class ViewMetadataBase(MetadataBaseModel):
-            _view = models.CharField(_('view'), max_length=255, unique=not (options.use_sites or options.use_i18n), default="", blank=True)
+            __context = None
+
+            _view = models.CharField(
+                _('view'),
+                max_length=255,
+                unique=not (options.use_sites or options.use_i18n),
+                default="",
+                blank=True
+            )
+
             if options.use_sites:
-                _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))
+                _site = models.ForeignKey(
+                    Site,
+                    null=True,
+                    blank=True,
+                    verbose_name=_("site")
+                )
+
             if options.use_i18n:
-                _language = models.CharField(_("language"), max_length=5, null=True, blank=True, db_index=True, choices=settings.LANGUAGES)
+                _language = models.CharField(
+                    _("language"),
+                    max_length=5,
+                    null=True,
+                    blank=True,
+                    db_index=True,
+                    choices=settings.LANGUAGES
+                )
+
             objects = self.get_manager(options)()
 
             def _process_context(self, context):
                 """ Use the context when rendering any substitutions.  """
-                if 'view_context' in context:
-                    self.__context = context['view_context']
+                self.__context = context.get('view_context')
 
             def _populate_from_kwargs(self):
                 return {'view_name': self._view}
@@ -217,7 +277,7 @@ class ViewBackend(MetadataBackend):
             def _resolve_value(self, name):
                 value = super(ViewMetadataBase, self)._resolve_value(name)
                 try:
-                    return _resolve(value, context=self.__context)
+                    return self._resolve_template(value, context=self.__context)
                 except AttributeError:
                     return value
 
@@ -241,14 +301,43 @@ class ModelInstanceBackend(MetadataBackend):
 
     def get_model(self, options):
         class ModelInstanceMetadataBase(MetadataBaseModel):
-            _path = models.CharField(_('path'), max_length=255, blank=True, editable=False, unique=not (options.use_sites or options.use_i18n))
-            _content_type = models.ForeignKey(ContentType, verbose_name=_("model"))
-            _object_id = models.PositiveIntegerField(verbose_name=_("object ID"))
+            _path = models.CharField(
+                _('path'),
+                max_length=255,
+                blank=True,
+                editable=False,
+                unique=not (options.use_sites or options.use_i18n)
+            )
+
+            _content_type = models.ForeignKey(
+                ContentType,
+                verbose_name=_("model")
+            )
+
+            _object_id = models.PositiveIntegerField(
+                verbose_name=_("ID")
+            )
+
             _content_object = GenericForeignKey('_content_type', '_object_id')
+
             if options.use_sites:
-                _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))
+                _site = models.ForeignKey(
+                    Site,
+                    null=True,
+                    blank=True,
+                    verbose_name=_("site")
+                )
+
             if options.use_i18n:
-                _language = models.CharField(_("language"), max_length=5, null=True, blank=True, db_index=True, choices=settings.LANGUAGES)
+                _language = models.CharField(
+                    _("language"),
+                    max_length=5,
+                    null=True,
+                    blank=True,
+                    db_index=True,
+                    choices=settings.LANGUAGES
+                )
+
             objects = self.get_manager(options)()
         
             def __unicode__(self):
@@ -286,16 +375,48 @@ class ModelBackend(MetadataBackend):
     unique_together = (("_content_type",),)
 
     def get_instances(self, queryset, path, context):
-        if context and 'content_type' in context:
-            return queryset.filter(_content_type=context['content_type'])
+        if not context:
+            return
+        content_type = None
+        if 'content_type' in context:
+            content_type = context['content_type']
+        else:
+            view_context = context.get('view_context')
+            if view_context:
+                instance = view_context.get('object')
+                if instance:
+                    content_type = ContentType.objects.get_for_model(instance)
+        if content_type:
+            return queryset.filter(_content_type=content_type)
 
     def get_model(self, options):
         class ModelMetadataBase(MetadataBaseModel):
-            _content_type = models.ForeignKey(ContentType, verbose_name=_("model"))
+            __instance = None
+            __context = None
+
+            _content_type = models.ForeignKey(
+                ContentType,
+                verbose_name=_("model")
+            )
+
             if options.use_sites:
-                _site = models.ForeignKey(Site, null=True, blank=True, verbose_name=_("site"))
+                _site = models.ForeignKey(
+                    Site,
+                    null=True,
+                    blank=True,
+                    verbose_name=_("site")
+                )
+
             if options.use_i18n:
-                _language = models.CharField(_("language"), max_length=5, null=True, blank=True, db_index=True, choices=settings.LANGUAGES)
+                _language = models.CharField(
+                    _("language"),
+                    max_length=5,
+                    null=True,
+                    blank=True,
+                    db_index=True,
+                    choices=settings.LANGUAGES
+                )
+
             objects = self.get_manager(options)()
 
             def __unicode__(self):
@@ -305,22 +426,22 @@ class ModelBackend(MetadataBackend):
                 """ Use the given model instance as context for rendering
                     any substitutions.
                 """
-                if 'model_instance' in context:
-                    self.__instance = context['model_instance']
+                self.__instance = context.get('model_instance')
+                self.__context = context.get('view_context')
 
             def _populate_from_kwargs(self):
                 return {'content_type': self._content_type}
 
             def _resolve_value(self, name):
                 value = super(ModelMetadataBase, self)._resolve_value(name)
-                try:
-                    return _resolve(value, self.__instance._content_object)
-                except AttributeError:
-                    return value
-        
+                content_object = getattr(self.__instance, '_content_object', None)
+                return self._resolve_template(value, content_object,
+                                              context=self.__context)
+
             class Meta:
                 abstract = True
                 unique_together = self.get_unique_together(options)
+
         return ModelMetadataBase
 
     @staticmethod
@@ -329,19 +450,8 @@ class ModelBackend(MetadataBackend):
         """
         try:
             if options.backends.index('modelinstance') > options.backends.index('model'):
-                raise Exception("Metadata backend 'modelinstance' must come before 'model' backend")
+                raise Exception("Metadata backend 'modelinstance' must come "
+                                "before 'model' backend")
         except ValueError:
-            raise Exception("Metadata backend 'modelinstance' must be installed in order to use 'model' backend")
-
-
-def _resolve(value, model_instance=None, context=None):
-    """ Resolves any template references in the given value. 
-    """
-
-    if isinstance(value, basestring) and "{" in value:
-        if context is None:
-            context = Context()
-        if model_instance is not None:
-            context[model_instance._meta.model_name] = model_instance
-        value = Template(value).render(context)
-    return value
+            raise Exception("Metadata backend 'modelinstance' must be "
+                            "installed in order to use 'model' backend")
