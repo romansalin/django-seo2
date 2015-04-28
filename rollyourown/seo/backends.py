@@ -214,8 +214,18 @@ class PathBackend(MetadataBackend):
             def __unicode__(self):
                 return self._path
 
+            def _process_context(self, context):
+                self.__context = context.get('view_context')
+
             def _populate_from_kwargs(self):
                 return {'path': self._path}
+
+            def _resolve_value(self, name):
+                value = super(PathMetadataBase, self)._resolve_value(name)
+                try:
+                    return self._resolve_template(value, context=self.__context)
+                except AttributeError:
+                    return value
 
             class Meta:
                 abstract = True
@@ -348,11 +358,20 @@ class ModelInstanceBackend(MetadataBackend):
                 abstract = True
 
             def _process_context(self, context):
+                self.__context = context.get('view_context')
                 context['content_type'] = self._content_type
                 context['model_instance'] = self
 
             def _populate_from_kwargs(self):
                 return {'model_instance': self._content_object}
+
+            def _resolve_value(self, name):
+                value = super(ModelInstanceMetadataBase, self)._resolve_value(name)
+                try:
+                    return self._resolve_template(value, self._content_object,
+                                                  context=self.__context)
+                except AttributeError:
+                    return value
 
             def save(self, *args, **kwargs):
                 try:
