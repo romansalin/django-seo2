@@ -142,6 +142,8 @@ class MetadataBackend(object):
             return new_class
 
     def get_unique_together(self, options):
+        if not options.use_sites and not options.use_i18n:
+            return tuple()
         ut = []
         for ut_set in self.unique_together:
             ut_set = [a for a in ut_set]
@@ -283,7 +285,7 @@ class ViewBackend(MetadataBackend):
 
             def _populate_from_kwargs(self):
                 return {'view_name': self._view}
-        
+
             def _resolve_value(self, name):
                 value = super(ViewMetadataBase, self)._resolve_value(name)
                 try:
@@ -293,7 +295,7 @@ class ViewBackend(MetadataBackend):
 
             def __unicode__(self):
                 return self._view
-    
+
             class Meta:
                 abstract = True
                 unique_together = self.get_unique_together(options)
