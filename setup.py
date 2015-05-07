@@ -3,12 +3,10 @@
 
 from setuptools import setup, find_packages
 
-from rollyourown import version
-
 
 setup(
     name="DjangoSEO",
-    version=version,
+    version='1.1',
     packages=find_packages(exclude=["docs*", "tests*"]),
     install_requires=['Django>=1.7'],
     author="Will Hardy",
