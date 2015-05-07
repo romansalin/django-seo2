@@ -13,3 +13,4 @@ tests/settings_local.py
 *.egg
 .DS_Store
 .idea
+.ropeproject/
