@@ -4,10 +4,21 @@
 from setuptools import setup, find_packages
 
 
+def get_version():
+    """
+    Extracts the version number from the version.py file.
+    """
+    version_file = 'rollyourown/seo/version.py'
+    v_locals = {}
+    exec(open(version_file).read(), globals(), v_locals)
+    return v_locals['__version__']
+
+print(get_version())
 setup(
-    name="DjangoSEO",
-    version='1.1',
+    name="django-seo",
+    version=get_version(),
     packages=find_packages(exclude=["docs*", "tests*"]),
+    namespace_packages=['rollyourown'],
     install_requires=['Django>=1.7'],
     author="Will Hardy",
     author_email="djangoseo@willhardy.com.au",
@@ -15,7 +26,7 @@ setup(
     long_description=open('README.rst').read(),
     license="LICENSE",
     keywords="seo, django, framework",
-    url="https://github.com/willhardy/django-seo",
+    url="https://github.com/whyflyru/django-seo",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
@@ -29,5 +40,6 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development"
     ],
-    test_suite='tests.runtests.runtests'
+    test_suite='tests.runtests.runtests',
+    test_requires=['coveralls', 'coverage', 'django-discover-runner']
 )

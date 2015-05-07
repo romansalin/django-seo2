@@ -17,7 +17,7 @@ Not So Quick install
 If you don't have ``easy_install`` or ``pip`` installed, you will need to do things manually. 
 Firstly, install Django (version 1.1 or newer) by following the installation instructions at http://docs.djangoproject.com/en/dev/intro/install/.  
 
-Next download the Django SEO release from http://github.com/willhardy/django-seo. 
+Next download the Django SEO release from http://github.com/whyflyru/django-seo.
 To unpack and install it, run the following from your shell::
 
     tar xvzf DjangoSEO-1.0.tar.gz
@@ -32,5 +32,5 @@ Development version
 
 For those you like to help out, you can check out the development version here::
 
-    git clone git@github.com:willhardy/django-seo.git
+    git clone git@github.com:whyflyru/django-seo.git
 
