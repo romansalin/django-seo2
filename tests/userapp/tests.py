@@ -52,8 +52,8 @@ from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
 from django.core.management import call_command
 
-from rollyourown.seo import get_metadata as seo_get_metadata
-from rollyourown.seo.base import registry
+from django_seo.seo import get_metadata as seo_get_metadata
+from django_seo.seo.base import registry
 from userapp.models import Page, Product, Category, NoPath, Tag
 from userapp.seo import Coverage, WithSites, WithI18n, WithRedirect, WithRedirectSites, WithCache, WithCacheSites, WithCacheI18n, WithBackends
 
@@ -668,9 +668,9 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCache"))
 
-            self.assertEqual(cache.get('rollyourown.seo.Coverage.%s.title' % hexpath), None)
-            self.assertEqual(cache.get('rollyourown.seo.WithCache.%s.title' % hexpath), "1234")
-            self.assertEqual(cache.get('rollyourown.seo.WithCache.%s.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.title' % hexpath), None)
+            self.assertEqual(cache.get('django_seo.seo.WithCache.%s.title' % hexpath), "1234")
+            self.assertEqual(cache.get('django_seo.seo.WithCache.%s.subtitle' % hexpath), "")
 
     def test_use_cache_site(self):
         """ Checks that the cache plays nicely with sites.
@@ -683,9 +683,9 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheSites", site=site))
 
-            self.assertEqual(cache.get('rollyourown.seo.Coverage.%s.title' % hexpath), None)
-            self.assertEqual(cache.get('rollyourown.seo.WithCacheSites.%s.title' % hexpath), "1234")
-            self.assertEqual(cache.get('rollyourown.seo.WithCacheSites.%s.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.title' % hexpath), None)
+            self.assertEqual(cache.get('django_seo.seo.WithCacheSites.%s.title' % hexpath), "1234")
+            self.assertEqual(cache.get('django_seo.seo.WithCacheSites.%s.subtitle' % hexpath), "")
 
     def test_use_cache_i18n(self):
         """ Checks that the cache plays nicely with i18n.
@@ -697,10 +697,10 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheI18n", language='de'))
 
-            self.assertEqual(cache.get('rollyourown.seo.Coverage.%s.de.title' % hexpath), None)
-            self.assertEqual(cache.get('rollyourown.seo.WithCacheI18n.%s.en.title' % hexpath), None)
-            self.assertEqual(cache.get('rollyourown.seo.WithCacheI18n.%s.de.title' % hexpath), "1234")
-            self.assertEqual(cache.get('rollyourown.seo.WithCacheI18n.%s.de.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.de.title' % hexpath), None)
+            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.en.title' % hexpath), None)
+            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.de.title' % hexpath), "1234")
+            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.de.subtitle' % hexpath), "")
 
 
 class Templates(TestCase):

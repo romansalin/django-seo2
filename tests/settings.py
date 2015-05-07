@@ -27,7 +27,7 @@ INSTALLED_APPS = (
     'django.contrib.redirects',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    'rollyourown.seo',
+    'django_seo.seo',
     'userapp',
 )
 

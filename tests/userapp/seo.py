@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from rollyourown import seo
+from django_seo import seo
 from django.db import models
 from django.contrib.sites.models import Site
 

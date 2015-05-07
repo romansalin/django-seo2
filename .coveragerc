@@ -1,4 +1,4 @@
 # .coveragerc to control coverage.py
 [run]
-source=rollyourown
+source=django_seo
 omit = tests/*

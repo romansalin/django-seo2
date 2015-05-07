@@ -1,10 +1,10 @@
 from django.apps.config import AppConfig
 
-from rollyourown.seo.models import setup
+from django_seo.seo.models import setup
 
 
 class SeoConfig(AppConfig):
-    name = 'rollyourown.seo'
+    name = 'django_seo.seo'
 
     def ready(self):
         setup()

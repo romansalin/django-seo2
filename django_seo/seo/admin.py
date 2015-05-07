@@ -10,8 +10,8 @@ from django.forms.models import fields_for_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
 
-from rollyourown.seo.utils import get_seo_content_types
-from rollyourown.seo.systemviews import get_seo_views
+from django_seo.seo.utils import get_seo_content_types
+from django_seo.seo.systemviews import get_seo_views
 
 
 # TODO Use groups as fieldsets

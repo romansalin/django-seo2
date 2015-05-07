@@ -5,7 +5,7 @@ import warnings
 
 from django.core.management.base import BaseCommand, CommandError
 
-from rollyourown.seo.base import registry, populate_metadata
+from django_seo.seo.base import registry, populate_metadata
 
 
 class Command(BaseCommand):
