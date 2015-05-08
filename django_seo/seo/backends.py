@@ -142,8 +142,6 @@ class MetadataBackend(object):
             return new_class
 
     def get_unique_together(self, options):
-        if not options.use_sites and not options.use_i18n:
-            return tuple()
         ut = []
         for ut_set in self.unique_together:
             ut_set = [a for a in ut_set]
@@ -190,7 +188,6 @@ class PathBackend(MetadataBackend):
             _path = models.CharField(
                 _('path'),
                 max_length=255,
-                unique=not (options.use_sites or options.use_i18n)
             )
 
             if options.use_sites:
@@ -254,7 +251,6 @@ class ViewBackend(MetadataBackend):
             _view = models.CharField(
                 _('view'),
                 max_length=255,
-                unique=not (options.use_sites or options.use_i18n),
                 default="",
                 blank=True
             )
@@ -318,7 +314,6 @@ class ModelInstanceBackend(MetadataBackend):
                 max_length=255,
                 blank=True,
                 editable=False,
-                unique=not (options.use_sites or options.use_i18n)
             )
 
             _content_type = models.ForeignKey(
