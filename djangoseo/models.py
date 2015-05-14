@@ -19,7 +19,7 @@ def setup():
 
     # if SEO_MODELS is defined, create a default Metadata class
     if hasattr(settings, 'SEO_MODELS') and not is_loaded:
-        importlib.import_module('django_seo.seo.default')
+        importlib.import_module('djangoseo.default')
 
-    from django_seo.seo.base import register_signals
+    from djangoseo.base import register_signals
     register_signals()

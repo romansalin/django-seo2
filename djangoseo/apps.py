@@ -1,10 +1,10 @@
 from django.apps.config import AppConfig
 
-from django_seo.seo.models import setup
+from djangoseo.models import setup
 
 
 class SeoConfig(AppConfig):
-    name = 'django_seo.seo'
+    name = 'djangoseo'
 
     def ready(self):
         setup()

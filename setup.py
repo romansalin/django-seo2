@@ -8,7 +8,7 @@ def read_version():
     """
     Extracts the version number from the version.py file.
     """
-    version_file = 'django_seo/seo/version.py'
+    version_file = 'djangoseo/version.py'
     v_locals = {}
     exec(open(version_file).read(), globals(), v_locals)
     return v_locals['__version__']
@@ -18,7 +18,6 @@ setup(
     name="django-seo",
     version=read_version(),
     packages=find_packages(exclude=["docs*", "tests*"]),
-    namespace_packages=['django_seo'],
     install_requires=['Django>=1.7'],
     author="Will Hardy",
     author_email="djangoseo@willhardy.com.au",

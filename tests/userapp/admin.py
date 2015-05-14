@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.contrib import admin
 
-from django_seo.seo.admin import register_seo_admin, get_inline, auto_register_inlines
+from djangoseo.admin import register_seo_admin, get_inline, auto_register_inlines
 from userapp.seo import Coverage, WithSites, WithSEOModels
 from userapp.models import Product, Page, Category, Tag, NoPath
 

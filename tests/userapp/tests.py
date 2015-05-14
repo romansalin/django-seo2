@@ -52,8 +52,8 @@ from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
 from django.core.management import call_command
 
-from django_seo.seo import get_metadata as seo_get_metadata
-from django_seo.seo.base import registry
+from djangoseo.seo import get_metadata as seo_get_metadata
+from djangoseo.base import registry
 from userapp.models import Page, Product, Category, NoPath, Tag
 from userapp.seo import Coverage, WithSites, WithI18n, WithRedirect, WithRedirectSites, WithCache, WithCacheSites, WithCacheI18n, WithBackends
 
@@ -668,9 +668,9 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCache"))
 
-            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.title' % hexpath), None)
-            self.assertEqual(cache.get('django_seo.seo.WithCache.%s.title' % hexpath), "1234")
-            self.assertEqual(cache.get('django_seo.seo.WithCache.%s.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('djangoseo.Coverage.%s.title' % hexpath), None)
+            self.assertEqual(cache.get('djangoseo.WithCache.%s.title' % hexpath), "1234")
+            self.assertEqual(cache.get('djangoseo.WithCache.%s.subtitle' % hexpath), "")
 
     def test_use_cache_site(self):
         """ Checks that the cache plays nicely with sites.
@@ -683,9 +683,9 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheSites", site=site))
 
-            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.title' % hexpath), None)
-            self.assertEqual(cache.get('django_seo.seo.WithCacheSites.%s.title' % hexpath), "1234")
-            self.assertEqual(cache.get('django_seo.seo.WithCacheSites.%s.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('djangoseo.Coverage.%s.title' % hexpath), None)
+            self.assertEqual(cache.get('djangoseo.WithCacheSites.%s.title' % hexpath), "1234")
+            self.assertEqual(cache.get('djangoseo.WithCacheSites.%s.subtitle' % hexpath), "")
 
     def test_use_cache_i18n(self):
         """ Checks that the cache plays nicely with i18n.
@@ -697,10 +697,10 @@ class MetaOptions(TestCase):
             #unicode(seo_get_metadata(path, name="Coverage"))
             unicode(seo_get_metadata(path, name="WithCacheI18n", language='de'))
 
-            self.assertEqual(cache.get('django_seo.seo.Coverage.%s.de.title' % hexpath), None)
-            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.en.title' % hexpath), None)
-            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.de.title' % hexpath), "1234")
-            self.assertEqual(cache.get('django_seo.seo.WithCacheI18n.%s.de.subtitle' % hexpath), "")
+            self.assertEqual(cache.get('djangoseo.Coverage.%s.de.title' % hexpath), None)
+            self.assertEqual(cache.get('djangoseo.WithCacheI18n.%s.en.title' % hexpath), None)
+            self.assertEqual(cache.get('djangoseo.WithCacheI18n.%s.de.title' % hexpath), "1234")
+            self.assertEqual(cache.get('djangoseo.WithCacheI18n.%s.de.subtitle' % hexpath), "")
 
 
 class Templates(TestCase):
@@ -973,13 +973,13 @@ class Admin(TestCase):
         path = '/admin/userapp/tag/add/'
         data = {
             "name": "Test",
-            "seo-coveragemodelinstance-_content_type-_object_id-0-title": "test",
-            "seo-coveragemodelinstance-_content_type-_object_id-TOTAL_FORMS": "1",
-            "seo-coveragemodelinstance-_content_type-_object_id-INITIAL_FORMS": "0",
-            "seo-coveragemodelinstance-_content_type-_object_id-MAX_NUM_FORMS": "1",
-            "seo-withsitesmodelinstance-_content_type-_object_id-TOTAL_FORMS": "1",
-            "seo-withsitesmodelinstance-_content_type-_object_id-INITIAL_FORMS": "0",
-            "seo-withsitesmodelinstance-_content_type-_object_id-MAX_NUM_FORMS": "1",
+            "djangoseo-coveragemodelinstance-_content_type-_object_id-0-title": "test",
+            "djangoseo-coveragemodelinstance-_content_type-_object_id-TOTAL_FORMS": "1",
+            "djangoseo-coveragemodelinstance-_content_type-_object_id-INITIAL_FORMS": "0",
+            "djangoseo-coveragemodelinstance-_content_type-_object_id-MAX_NUM_FORMS": "1",
+            "djangoseo-withsitesmodelinstance-_content_type-_object_id-TOTAL_FORMS": "1",
+            "djangoseo-withsitesmodelinstance-_content_type-_object_id-INITIAL_FORMS": "0",
+            "djangoseo-withsitesmodelinstance-_content_type-_object_id-MAX_NUM_FORMS": "1",
         }
 
         try:
@@ -988,7 +988,7 @@ class Admin(TestCase):
             self.fail(u"Exception raised at '%s': %s" % (path, e))
         self.assertEqual(response.status_code, 200)
 
-        path = '/admin/seo/coveragemodel/add/'
+        path = '/admin/djangoseo/coveragemodel/add/'
         data = {
             "title": "Testing",
             "_content_type": u'3',

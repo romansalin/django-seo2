@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from django import template
-from django_seo.seo import get_metadata, get_linked_metadata
+from djangoseo.seo import get_metadata, get_linked_metadata
 from django.template import VariableDoesNotExist
 
 register = template.Library()

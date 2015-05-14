@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-from django_seo import seo
+from djangoseo import seo
 from django.db import models
 from django.contrib.sites.models import Site
 

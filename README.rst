@@ -2,10 +2,10 @@
 Django SEO tools
 ================
 
-.. image:: https://travis-ci.org/whyflyru/django-seo.png?branch=master
+.. image:: https://travis-ci.org/whyflyru/django-seo.svg?branch=master
     :target: https://travis-ci.org/whyflyru/django-seo?branch=master
 
-.. image:: https://coveralls.io/repos/whyflyru/django-seo/badge.png?branch=master
+.. image:: https://coveralls.io/repos/whyflyru/django-seo/badge.svg?branch=master
     :target: https://coveralls.io/r/whyflyru/django-seo?branch=master
 
 This is a set of SEO tools for Django.

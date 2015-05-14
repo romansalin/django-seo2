@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 from __future__ import unicode_literals
 
-from django_seo import seo
+from djangoseo import seo
 from django.conf import settings
 
 

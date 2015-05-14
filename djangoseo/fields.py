@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import conditional_escape
 
-from django_seo.seo.utils import escape_tags, NotSet, Literal
+from djangoseo.utils import escape_tags, NotSet, Literal
 
 
 VALID_HEAD_TAGS = "head title base link meta script".split()
