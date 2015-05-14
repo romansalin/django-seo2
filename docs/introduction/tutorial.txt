@@ -13,7 +13,7 @@ Before we start
 ---------------
 
 This tutorial assumes you already know how to use Django, and that you have a site with some apps already up and running.
-It assumes you have installed the library somewhere where python can get it, and that you've added ``django_seo.seo`` to your ``INSTALLED_APPS`` setting.
+It assumes you have installed the library somewhere where python can get it, and that you've added ``djangoseo`` to your ``INSTALLED_APPS`` setting.
 
 Metadata definition
 --------------------
@@ -22,7 +22,7 @@ You can define which fields appear in your metadata by creating a class that sub
 
 .. code-block:: python
 
-    from django_seo import seo
+    from djangoseo import seo
 
     class MyMetadata(seo.Metadata):
         title       = seo.Tag(head=True, max_length=68)
@@ -51,7 +51,7 @@ To view and edit these in Django's admin, add the following to your ``urls.py``:
 
 .. code-block:: python
 
-    from django_seo.seo.admin import register_seo_admin
+    from djangoseo.admin import register_seo_admin
     from django.contrib import admin
     from myapp.seo import MyMetadata
 

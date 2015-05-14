@@ -24,7 +24,7 @@ Here is an example of a definition:
 
 .. code:: python
 
-    from django_seo import seo
+    from djangoseo import seo
 
     class BasicMetadata(seo.Metadata):
         title          = seo.Tag(max_length=68, head=True)

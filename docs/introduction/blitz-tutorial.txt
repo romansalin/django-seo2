@@ -9,7 +9,7 @@ This is an inordinately brief tutorial, for Django experts who don't like to was
 Step One
 --------
 
-* Add ``django_seo.seo`` to ``INSTALLED_APPS``
+* Add ``djangoseo`` to ``INSTALLED_APPS``
 * Make sure ``"django.core.context_processors.request"`` is listed in ``TEMPLATE_CONTEXT_PROCESSORS``
 
 Step Two: Definition
@@ -19,7 +19,7 @@ Create a file ``seo.py`` in any app, with the following simple definition:
 
 .. code-block:: python
 
-    from django_seo import seo
+    from djangoseo import seo
 
     class MyMetadata(seo.Metadata):
         title       = seo.Tag(head=True, max_length=68)
@@ -36,7 +36,7 @@ To edit the data in the admin, call ``register_seo_admin`` with the admin site a
 
 .. code-block:: python
 
-    from django_seo.seo.admin import register_seo_admin
+    from djangoseo.admin import register_seo_admin
     from django.contrib import admin
     from myapp.seo import MyMetadata
 

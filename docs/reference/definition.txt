@@ -349,7 +349,7 @@ To add the models of your defined metadata to an admin site, make a single call 
 
 .. code-block:: python
 
-    from django_seo.seo.admin import register_seo_admin
+    from djangoseo.admin import register_seo_admin
     from django.contrib import admin
     from myapp.seo import MyMetadata
 
@@ -359,7 +359,7 @@ An admin inline can also be created, to add metadata as an inline form on the ad
 
 .. code-block:: python
 
-    from django_seo.seo.admin import get_inline
+    from djangoseo.admin import get_inline
     from django.contrib import admin
     from myapp.seo import MyMetadata
 
@@ -371,7 +371,7 @@ This function will add inlines for every model listed in ``seo_models`` both bef
 
 .. code-block:: python
 
-    from django_seo.seo.admin import auto_register_inlines
+    from djangoseo.admin import auto_register_inlines
     from django.contrib import admin
     from myapp.seo import MyMetadata
 
