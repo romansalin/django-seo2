@@ -21,11 +21,11 @@ def get_view_names(seo_views):
             app_name = app.__name__.split(".")[:-1]
             app_name.append("urls")
             try:
-                urls = importlib.import_module(".".join(app_name)).urls
+                urls = importlib.import_module(".".join(app_name)).urlpatterns
             except (ImportError, AttributeError):
                 output.append(name)
             else:
-                for url in urls.urlpatterns:
+                for url in urls:
                     if getattr(url, 'name', None):
                         output.append(url.name)
     return output
