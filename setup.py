@@ -25,7 +25,7 @@ setup(
     long_description=open('README.rst').read(),
     license="LICENSE",
     keywords="seo, django, framework",
-    url="https://github.com/whyflyru/django-seo",
+    url="https://github.com/romansalin/django-seo",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
