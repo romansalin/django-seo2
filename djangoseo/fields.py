@@ -4,6 +4,7 @@ import re
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from six import string_types
 
 from djangoseo.utils import escape_tags, NotSet, Literal
 
@@ -34,12 +35,12 @@ class MetadataField(object):
             field_kwargs = {}
         self.field_kwargs = field_kwargs
 
-        if choices and isinstance(choices[0], basestring):
+        if choices and isinstance(choices[0], string_types):
             choices = [(c, c) for c in choices]
         field_kwargs.setdefault('choices', choices)
 
         # If valid_tags is a string, tags are space separated words
-        if isinstance(valid_tags, basestring):
+        if isinstance(valid_tags, string_types):
             valid_tags = valid_tags.split()
         if valid_tags is not None:
             valid_tags = set(valid_tags)
@@ -61,12 +62,12 @@ class MetadataField(object):
             elif isinstance(self.populate_from, Literal):
                 self.help_text = _('If empty, \"%s\" will be used.') \
                     % self.populate_from.value
-            elif isinstance(self.populate_from, basestring) and \
+            elif isinstance(self.populate_from, string_types) and \
                     self.populate_from in cls._meta.elements:
                 field = cls._meta.elements[self.populate_from]
                 self.help_text = (_('If empty, %s will be used.') %
                                   field.verbose_name or field.name)
-            elif isinstance(self.populate_from, basestring) and hasattr(
+            elif isinstance(self.populate_from, string_types) and hasattr(
                     cls, self.populate_from):
                 populate_from = getattr(cls, self.populate_from, None)
                 if callable(populate_from) and hasattr(populate_from,

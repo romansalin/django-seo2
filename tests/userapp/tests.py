@@ -40,7 +40,6 @@ For better coverage:
 """
 
 from __future__ import unicode_literals
-from six import text_type
 
 import hashlib
 
@@ -62,6 +61,7 @@ from django.template import Template, RequestContext, TemplateSyntaxError
 from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
 from django.core.management import call_command
+from six import text_type
 
 from djangoseo.base import registry, get_metadata as seo_get_metadata
 from userapp.models import Page, Product, Category, NoPath, Tag

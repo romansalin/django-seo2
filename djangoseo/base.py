@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from six import with_metaclass, text_type
 
 # TODO:
 # * Move/rename namespace polluting attributes
@@ -15,12 +14,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
 from django.utils.encoding import iri_to_uri, python_2_unicode_compatible
+from six import with_metaclass, text_type
 
 
 from djangoseo.utils import NotSet, Literal
 from djangoseo.options import Options
 from djangoseo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
 from djangoseo.backends import backend_registry, RESERVED_FIELD_NAMES
+from djangoseo.utils import compare
 
 registry = OrderedDict()
 
@@ -187,8 +188,8 @@ class MetadataBase(type):
         # Collect and sort our elements
         elements = [(key, attrs.pop(key)) for key, obj in attrs.items()
                     if isinstance(obj, MetadataField)]
-        elements.sort(lambda x, y: cmp(x[1].creation_counter,
-                                       y[1].creation_counter))
+        elements.sort(lambda x, y: compare(x[1].creation_counter,
+                                           y[1].creation_counter))
         elements = OrderedDict(elements)
 
         # Validation:

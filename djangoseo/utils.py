@@ -55,7 +55,7 @@ def _resolver_resolve_to_name(resolver, path):
                     name = _pattern_resolve_to_name(pattern, new_path)
                 elif isinstance(pattern, RegexURLResolver):
                     name = _resolver_resolve_to_name(pattern, new_path)
-            except Resolver404, e:
+            except Resolver404 as e:
                 tried.extend([(pattern.regex.pattern + '   ' + t) for t in
                               e.args[0]['tried']])
             else:
@@ -124,3 +124,7 @@ def _get_seo_content_types(seo_models):
 
 def get_seo_content_types(seo_models):
     return lazy(_get_seo_content_types, list)(seo_models)
+
+
+def compare(x, y):
+    return (x > y) - (x < y)

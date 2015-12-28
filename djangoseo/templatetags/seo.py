@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
-from six import text_type
 
 from django import template
 from django.template import VariableDoesNotExist
+from six import text_type, string_types
 
 from djangoseo.base import get_metadata, get_linked_metadata
 
@@ -30,7 +30,7 @@ class MetadataNode(template.Node):
         else:
             if callable(target):
                 target = target()
-            if isinstance(target, basestring):
+            if isinstance(target, string_types):
                 path = target
             elif hasattr(target, 'get_absolute_url'):
                 path = target.get_absolute_url()
@@ -54,7 +54,7 @@ class MetadataNode(template.Node):
         if hasattr(target, 'pk'):
             metadata = get_linked_metadata(target, self.metadata_name, context,
                                            **kwargs)
-        if not isinstance(path, basestring):
+        if not isinstance(path, string_types):
             path = None
         if not metadata:
             # Fetch the metadata

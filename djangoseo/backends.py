@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template import Template, Context
 from django.utils.encoding import python_2_unicode_compatible
+from six import string_types
 
 from djangoseo.utils import resolve_to_name, NotSet, Literal
 
@@ -73,7 +74,7 @@ class MetadataBaseModel(models.Model):
     @staticmethod
     def _resolve_template(value, model_instance=None, context=None):
         """Resolves any template references in the given value."""
-        if isinstance(value, basestring) and "{" in value:
+        if isinstance(value, string_types) and "{" in value:
             if context is None:
                 context = Context()
             if model_instance is not None:
