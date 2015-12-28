@@ -1,3 +1,4 @@
 coverage
 coveralls
 django-discover-runner
+flake8

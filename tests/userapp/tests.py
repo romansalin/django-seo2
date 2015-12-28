@@ -54,7 +54,6 @@ except ImportError:
 from django.test.client import FakePayload
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
-from django.contrib.redirects.models import Redirect
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.db import IntegrityError, transaction
@@ -64,8 +63,7 @@ from django.core.cache import cache
 from django.utils.encoding import iri_to_uri
 from django.core.management import call_command
 
-from djangoseo.seo import get_metadata as seo_get_metadata
-from djangoseo.base import registry
+from djangoseo.base import registry, get_metadata as seo_get_metadata
 from userapp.models import Page, Product, Category, NoPath, Tag
 from userapp.seo import (Coverage, WithSites, WithI18n, WithRedirect,
                          WithRedirectSites, WithCache, WithCacheSites,

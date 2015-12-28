@@ -4,7 +4,7 @@ from six import text_type
 from django import template
 from django.template import VariableDoesNotExist
 
-from djangoseo.seo import get_metadata, get_linked_metadata
+from djangoseo.base import get_metadata, get_linked_metadata
 
 register = template.Library()
 
