@@ -1,3 +1,9 @@
-include README.rst LICENSE MANIFEST.in setup.py .coveragerc AUTHORS TODO
+include .coveragerc
+include AUTHORS.rst
+include LICENSE
+include MANIFEST.in
+include README.rst
+include TODO.rst
+
 recursive-include docs *
 recursive-include tests *

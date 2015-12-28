@@ -1,12 +1,19 @@
 language: python
 python:
   - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
 env:
-  - DJANGO=1.7 DB=sqlite
-  - DJANGO=1.8 DB=sqlite
+  - DJANGO_VERSION=1.7 DB=sqlite
+  - DJANGO_VERSION=1.8 DB=sqlite
+  - DJANGO_VERSION=1.9 DB=sqlite
 install:
-  - pip install -q Django==$DJANGO
-  - pip install coveralls coverage django-discover-runner
+  - pip install -q Django==$DJANGO_VERSION --use-mirrors
+  - pip install -r test-requirements.txt --use-mirrors
+  - pip install flake8 --use-mirrors
+before_script:
+  - flake8 djangoseo tests
 script:
   - coverage run --rcfile=.coveragerc setup.py test
 after_success:

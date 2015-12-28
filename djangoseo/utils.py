@@ -112,7 +112,7 @@ def _get_seo_content_types(seo_models):
     """
     try:
         return [ContentType.objects.get_for_model(m).id for m in seo_models]
-    except: # previously caught DatabaseError
+    except Exception:  # previously caught DatabaseError
         # Return an empty list if this is called too early
         return []
 

@@ -99,8 +99,8 @@ class Options(object):
                 if model:
                     seo_models.append(model)
             else:
-                app = apps.get_app_config(model_name).models_module
+                app = apps.get_app_config(model_name)
                 if app:
-                    seo_models.extend(apps.get_models(app))
+                    seo_models.extend(app.get_models())
 
         self.seo_models = seo_models

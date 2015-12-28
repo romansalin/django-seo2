@@ -1,44 +1,43 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
 from setuptools import setup, find_packages
 
+VERSION = "1.0.0"
 
-def read_version():
-    """
-    Extracts the version number from the version.py file.
-    """
-    version_file = 'djangoseo/version.py'
-    v_locals = {}
-    exec(open(version_file).read(), globals(), v_locals)
-    return v_locals['__version__']
+
+def read_file(filepath):
+    with open(filepath) as f:
+        return f.read()
 
 
 setup(
     name="django-seo",
-    version=read_version(),
-    packages=find_packages(exclude=["docs*", "tests*"]),
-    install_requires=['Django>=1.7'],
-    author="Will Hardy",
-    author_email="djangoseo@willhardy.com.au",
+    version=VERSION,
     description="A framework for managing SEO metadata in Django.",
-    long_description=open('README.rst').read(),
-    license="LICENSE",
-    keywords="seo, django, framework",
+    long_description=read_file('README.rst'),
     url="https://github.com/romansalin/django-seo",
+    author="Roman Salin",
+    author_email="romansalin1990@gmail.com",
+    keywords="seo django framework",
+    license="MIT",
     include_package_data=True,
     zip_safe=False,
+    packages=find_packages(exclude=["docs*", "tests*"]),
+    install_requires=read_file("requirements.txt").splitlines(),
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Django",
         "Intended Audience :: Developers",
-        "Programming Language :: Python",
-        "License :: OSI Approved :: Apache Software License",
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Topic :: Software Development"
+        "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+        "Topic :: Internet :: WWW/HTTP :: Site Management",
+        "Topic :: Software Development :: Libraries :: Application Frameworks",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
     ],
-    test_suite='tests.runtests.runtests',
-    test_requires=['coveralls', 'coverage', 'django-discover-runner']
+    test_suite="tests.runtests.runtests",
 )
