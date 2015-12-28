@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+from __future__ import unicode_literals
+
 import os
 import sys
 
@@ -11,7 +12,7 @@ def runtests():
     os.environ["DJANGO_SETTINGS_MODULE"] = "tests.settings"
 
     from django.core.wsgi import get_wsgi_application
-    application = get_wsgi_application()
+    get_wsgi_application()
 
     from django.core.management import call_command
     result = call_command('test', 'userapp')

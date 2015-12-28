@@ -30,7 +30,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 lint:
-	flake8 djangoseo tests
+	flake8 djangoseo tests --ignore=F401
 
 test:
 	python setup.py test

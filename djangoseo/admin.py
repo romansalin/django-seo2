@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from django import forms
 from django.contrib import admin
@@ -34,7 +34,7 @@ class ModelMetadataAdmin(admin.ModelAdmin):
 
 
 class ViewMetadataAdmin(admin.ModelAdmin):
-    list_display = ('_view', )
+    list_display = ('_view',)
     search_fields = ('_view',)
 
 
@@ -65,7 +65,7 @@ class SiteViewMetadataAdmin(admin.ModelAdmin):
 
 
 def register_seo_admin(admin_site, metadata_class):
-    """ Register the backends specified in Meta.backends with the admin """
+    """Register the backends specified in Meta.backends with the admin."""
 
     if metadata_class._meta.use_sites:
         path_admin = SitePathMetadataAdmin
@@ -79,8 +79,9 @@ def register_seo_admin(admin_site, metadata_class):
         view_admin = ViewMetadataAdmin
 
     def get_list_display():
-        return tuple(name for name, obj in metadata_class._meta.elements.items()
-                     if obj.editable)
+        return tuple(
+            name for name, obj in metadata_class._meta.elements.items()
+            if obj.editable)
 
     backends = metadata_class._meta.backends
 
@@ -89,34 +90,41 @@ def register_seo_admin(admin_site, metadata_class):
             form = get_model_form(metadata_class)
             list_display = model_admin.list_display + get_list_display()
 
-        _register_admin(admin_site, metadata_class._meta.get_model('model'), ModelAdmin)
+        _register_admin(admin_site, metadata_class._meta.get_model('model'),
+                        ModelAdmin)
 
     if 'view' in backends:
         class ViewAdmin(view_admin):
             form = get_view_form(metadata_class)
             list_display = view_admin.list_display + get_list_display()
 
-        _register_admin(admin_site, metadata_class._meta.get_model('view'), ViewAdmin)
+        _register_admin(admin_site, metadata_class._meta.get_model('view'),
+                        ViewAdmin)
 
     if 'path' in backends:
         class PathAdmin(path_admin):
             form = get_path_form(metadata_class)
             list_display = path_admin.list_display + get_list_display()
 
-        _register_admin(admin_site, metadata_class._meta.get_model('path'), PathAdmin)
+        _register_admin(admin_site, metadata_class._meta.get_model('path'),
+                        PathAdmin)
 
     if 'modelinstance' in backends:
         class ModelInstanceAdmin(model_instance_admin):
             form = get_modelinstance_form(metadata_class)
-            list_display = model_instance_admin.list_display + get_list_display()
+            list_display = (model_instance_admin.list_display +
+                            get_list_display())
 
-        _register_admin(admin_site, metadata_class._meta.get_model('modelinstance'), ModelInstanceAdmin)
+        _register_admin(admin_site,
+                        metadata_class._meta.get_model('modelinstance'),
+                        ModelInstanceAdmin)
 
 
 def _register_admin(admin_site, model, admin_class):
-    """ Register model in the admin, ignoring any previously registered models.
-        Alternatively it could be used in the future to replace a previously
-        registered model.
+    """
+    Register model in the admin, ignoring any previously registered models.
+    Alternatively it could be used in the future to replace a previously
+    registered model.
     """
     try:
         admin_site.register(model, admin_class)
@@ -126,7 +134,7 @@ def _register_admin(admin_site, model, admin_class):
 
 class MetadataFormset(BaseGenericInlineFormSet):
     def _construct_form(self, i, **kwargs):
-        """ Override the method to change the form attribute empty_permitted """
+        """Override the method to change the form attribute empty_permitted."""
         form = super(MetadataFormset, self)._construct_form(i, **kwargs)
         # Monkey patch the form to always force a save.
         # It's unfortunate, but necessary because we always want an instance
@@ -136,7 +144,8 @@ class MetadataFormset(BaseGenericInlineFormSet):
         form.has_changed = lambda: True
 
         # Set a marker on this object to prevent automatic metadata creation
-        # This is seen by the post_save handler, which then skips this instance.
+        # This is seen by the post_save handler, which then skips this
+        # instance.
         if self.instance:
             self.instance.__seo_metadata_handled = True
 
@@ -152,7 +161,7 @@ def get_inline(metadata_class):
         'ct_fk_field': "_object_id",
         'formset': MetadataFormset,
     }
-    return type('MetadataInline', (GenericStackedInline,), attrs)
+    return type(b'MetadataInline', (GenericStackedInline,), attrs)
 
 
 def get_model_form(metadata_class):
@@ -165,8 +174,8 @@ def get_model_form(metadata_class):
 
     # Get a list of fields, with _content_type at the start
     important_fields = ['_content_type'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class,
-                                                  exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(
+        model_class, exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
         _content_type = forms.ChoiceField(label=capfirst(_("model")),
@@ -193,9 +202,10 @@ def get_modelinstance_form(metadata_class):
     content_types = get_seo_content_types(metadata_class._meta.seo_models)
 
     # Get a list of fields, with _content_type at the start
-    important_fields = ['_content_type'] + ['_object_id'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class,
-                                                  exclude=important_fields).keys()
+    important_fields = ['_content_type'] + ['_object_id'] + core_choice_fields(
+        metadata_class)
+    _fields = important_fields + fields_for_model(
+        model_class, exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
         _content_type = forms.ModelChoiceField(
@@ -218,8 +228,8 @@ def get_path_form(metadata_class):
 
     # Get a list of fields, with _view at the start
     important_fields = ['_path'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class,
-                                                  exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(
+        model_class, exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
         class Meta:
@@ -233,13 +243,14 @@ def get_view_form(metadata_class):
     model_class = metadata_class._meta.get_model('view')
 
     # Restrict content type choices to the models set in seo_models
-    view_choices = [(key, " ".join(key.split("_"))) for key in get_seo_views(metadata_class)]
+    view_choices = [(key, " ".join(key.split("_"))) for key in
+                    get_seo_views(metadata_class)]
     view_choices.insert(0, ("", "---------"))
 
     # Get a list of fields, with _view at the start
     important_fields = ['_view'] + core_choice_fields(metadata_class)
-    _fields = important_fields + fields_for_model(model_class,
-                                                  exclude=important_fields).keys()
+    _fields = important_fields + fields_for_model(
+        model_class, exclude=important_fields).keys()
 
     class ModelMetadataForm(forms.ModelForm):
         _view = forms.ChoiceField(label=capfirst(_("view")),
@@ -253,8 +264,9 @@ def get_view_form(metadata_class):
 
 
 def core_choice_fields(metadata_class):
-    """ If the 'optional' core fields (_site and _language) are required,
-        list them here.
+    """
+    If the 'optional' core fields (_site and _language) are required,
+    list them here.
     """
     fields = []
     if metadata_class._meta.use_sites:
@@ -264,12 +276,15 @@ def core_choice_fields(metadata_class):
     return fields
 
 
-def _monkey_inline(model, admin_class_instance, metadata_class, inline_class, admin_site):
-    """ Monkey patch the inline onto the given admin_class instance. """
+def _monkey_inline(model, admin_class_instance, metadata_class, inline_class,
+                   admin_site):
+    """Monkey patch the inline onto the given admin_class instance."""
     if model in metadata_class._meta.seo_models:
         # *Not* adding to the class attribute "inlines", as this will affect
-        # all instances from this class. Explicitly adding to instance attribute.
-        admin_class_instance.__dict__['inlines'] = admin_class_instance.inlines + [inline_class]
+        # all instances from this class. Explicitly adding to instance
+        # attribute.
+        admin_class_instance.__dict__[
+            'inlines'] = admin_class_instance.inlines + [inline_class]
 
         # Because we've missed the registration, we need to perform actions
         # that were done then (on admin class instantiation)
@@ -279,28 +294,33 @@ def _monkey_inline(model, admin_class_instance, metadata_class, inline_class, ad
 
 
 def _with_inline(func, admin_site, metadata_class, inline_class):
-    """ Decorator for register function that adds an appropriate inline."""
+    """Decorator for register function that adds an appropriate inline."""
 
     def register(model_or_iterable, admin_class=None, **options):
         # Call the (bound) function we were given.
         # We have to assume it will be bound to admin_site
         func(model_or_iterable, admin_class, **options)
-        _monkey_inline(model_or_iterable, admin_site._registry[model_or_iterable],
+        _monkey_inline(model_or_iterable,
+                       admin_site._registry[model_or_iterable],
                        metadata_class, inline_class, admin_site)
 
     return register
 
 
 def auto_register_inlines(admin_site, metadata_class):
-    """ This is a questionable function that automatically adds our metadata
-        inline to all relevant models in the site.
+    """
+    This is a questionable function that automatically adds our metadata
+    inline to all relevant models in the site.
     """
     inline_class = get_inline(metadata_class)
 
     for model, admin_class_instance in admin_site._registry.items():
-        _monkey_inline(model, admin_class_instance, metadata_class, inline_class, admin_site)
+        _monkey_inline(model, admin_class_instance, metadata_class,
+                       inline_class, admin_site)
 
-    # Monkey patch the register method to automatically add an inline for this site.
-    # _with_inline() is a decorator that wraps the register function with the same injection code
-    # used above (_monkey_inline).
-    admin_site.register = _with_inline(admin_site.register, admin_site, metadata_class, inline_class)
+    # Monkey patch the register method to automatically add an inline for
+    # this site.
+    # _with_inline() is a decorator that wraps the register function with the
+    # same injection code used above (_monkey_inline).
+    admin_site.register = _with_inline(admin_site.register, admin_site,
+                                       metadata_class, inline_class)

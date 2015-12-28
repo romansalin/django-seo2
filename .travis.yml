@@ -9,11 +9,12 @@ env:
   - DJANGO_VERSION=1.8 DB=sqlite
   - DJANGO_VERSION=1.9 DB=sqlite
 install:
-  - pip install -q Django==$DJANGO_VERSION --use-mirrors
+  - pip install -r requirements.txt --use-mirrors
   - pip install -r test-requirements.txt --use-mirrors
+  - pip install -q Django==$DJANGO_VERSION --use-mirrors
   - pip install flake8 --use-mirrors
 before_script:
-  - flake8 djangoseo tests
+  - flake8 djangoseo tests --ignore=F401
 script:
   - coverage run --rcfile=.coveragerc setup.py test
 after_success:

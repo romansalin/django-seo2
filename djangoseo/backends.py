@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+from __future__ import unicode_literals
 
 from collections import OrderedDict
 
@@ -11,18 +10,18 @@ from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template import Template, Context
+from django.utils.encoding import python_2_unicode_compatible
 
 from djangoseo.utils import resolve_to_name, NotSet, Literal
 
 RESERVED_FIELD_NAMES = ('_metadata', '_path', '_content_type', '_object_id',
-                        '_content_object', '_view', '_site', 'objects', 
+                        '_content_object', '_view', '_site', 'objects',
                         '_resolve_value', '_set_context', 'id', 'pk')
 
 backend_registry = OrderedDict()
 
 
 class MetadataBaseModel(models.Model):
-
     class Meta:
         abstract = True
 
@@ -73,7 +72,7 @@ class MetadataBaseModel(models.Model):
 
     @staticmethod
     def _resolve_template(value, model_instance=None, context=None):
-        """ Resolves any template references in the given value. """
+        """Resolves any template references in the given value."""
         if isinstance(value, basestring) and "{" in value:
             if context is None:
                 context = Context()
@@ -109,15 +108,17 @@ class BaseManager(models.Manager):
 #
 # A Backend:
 #   -  defines an abstract base class for storing the information required to
-#      associate metadata with its target (ie a view, a path, a model instance etc)
+#      associate metadata with its target (ie a view, a path, a model instance
+#      etc)
 #   -  defines a method for retrieving an instance
 #
 # This is not particularly easy.
 #   -  unique_together fields need to be defined in the same django model, as
-#      some django versions don't enforce the uniqueness when it spans subclasses
+#      some django versions don't enforce the uniqueness when it spans
+#      subclasses
 #   -  most backends use the path to find a matching instance. The model
-#      backend however ideally needs a content_type (found from a model instance
-#      backend, which used the path)
+#      backend however ideally needs a content_type (found from a model
+#      instance backend, which used the path)
 #   -  catering for all the possible options (use_sites, use_languages), needs
 #      to be done succiently, and at compile time
 #
@@ -125,7 +126,8 @@ class BaseManager(models.Manager):
 #   -  all fields that share uniqueness (backend fields, _site, _language) need
 #      to be defined in the same model
 #   -  as backends should have full control over the model, therefore every
-#      backend needs to define the compulsory fields themselves (eg _site and _language).
+#      backend needs to define the compulsory fields themselves (eg _site and
+#      _language).
 #      There is no way to add future compulsory fields to all backends without
 #      editing each backend individually.
 #      This is probably going to have to be a limitataion we need to live with.
@@ -156,7 +158,8 @@ class MetadataBackend(object):
         _get_instances = self.get_instances
 
         class _Manager(BaseManager):
-            def get_instances(self, path, site=None, language=None, context=None):
+            def get_instances(self, path, site=None, language=None,
+                              context=None):
                 queryset = self.for_site_and_language(site, language)
                 return _get_instances(queryset, path, context)
 
@@ -166,13 +169,12 @@ class MetadataBackend(object):
                     if language:
                         queryset = queryset.filter(_language=language)
                     return queryset
-        return _Manager
 
+        return _Manager
 
     @staticmethod
     def validate(options):
-        """ Validates the application of this backend to a given metadata 
-        """
+        """Validates the application of this backend to a given metadata."""
 
 
 class PathBackend(MetadataBackend):
@@ -184,6 +186,7 @@ class PathBackend(MetadataBackend):
         return queryset.filter(_path=path)
 
     def get_model(self, options):
+        @python_2_unicode_compatible
         class PathMetadataBase(MetadataBaseModel):
             _path = models.CharField(
                 _('path'),
@@ -195,7 +198,7 @@ class PathBackend(MetadataBackend):
                     Site,
                     null=True,
                     blank=True,
-                    verbose_name=_("site")
+                    verbose_name=_("site"),
                 )
 
             if options.use_i18n:
@@ -205,12 +208,12 @@ class PathBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     db_index=True,
-                    choices=settings.LANGUAGES
+                    choices=settings.LANGUAGES,
                 )
 
             objects = self.get_manager(options)()
 
-            def __unicode__(self):
+            def __str__(self):
                 return self._path
 
             def _process_context(self, context):
@@ -222,7 +225,8 @@ class PathBackend(MetadataBackend):
             def _resolve_value(self, name):
                 value = super(PathMetadataBase, self)._resolve_value(name)
                 try:
-                    return self._resolve_template(value, context=self.__context)
+                    return self._resolve_template(value,
+                                                  context=self.__context)
                 except AttributeError:
                     return value
 
@@ -245,6 +249,7 @@ class ViewBackend(MetadataBackend):
         return queryset.filter(_view=view_name or "")
 
     def get_model(self, options):
+        @python_2_unicode_compatible
         class ViewMetadataBase(MetadataBaseModel):
             __context = None
 
@@ -252,7 +257,7 @@ class ViewBackend(MetadataBackend):
                 _('view'),
                 max_length=255,
                 default="",
-                blank=True
+                blank=True,
             )
 
             if options.use_sites:
@@ -260,7 +265,7 @@ class ViewBackend(MetadataBackend):
                     Site,
                     null=True,
                     blank=True,
-                    verbose_name=_("site")
+                    verbose_name=_("site"),
                 )
 
             if options.use_i18n:
@@ -270,13 +275,13 @@ class ViewBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     db_index=True,
-                    choices=settings.LANGUAGES
+                    choices=settings.LANGUAGES,
                 )
 
             objects = self.get_manager(options)()
 
             def _process_context(self, context):
-                """ Use the context when rendering any substitutions.  """
+                """Use the context when rendering any substitutions."""
                 self.__context = context.get('view_context')
 
             def _populate_from_kwargs(self):
@@ -285,11 +290,12 @@ class ViewBackend(MetadataBackend):
             def _resolve_value(self, name):
                 value = super(ViewMetadataBase, self)._resolve_value(name)
                 try:
-                    return self._resolve_template(value, context=self.__context)
+                    return self._resolve_template(value,
+                                                  context=self.__context)
                 except AttributeError:
                     return value
 
-            def __unicode__(self):
+            def __str__(self):
                 return self._view
 
             class Meta:
@@ -308,6 +314,7 @@ class ModelInstanceBackend(MetadataBackend):
         return queryset.filter(_path=path)
 
     def get_model(self, options):
+        @python_2_unicode_compatible
         class ModelInstanceMetadataBase(MetadataBaseModel):
             _path = models.CharField(
                 _('path'),
@@ -318,11 +325,11 @@ class ModelInstanceBackend(MetadataBackend):
 
             _content_type = models.ForeignKey(
                 ContentType,
-                verbose_name=_("model")
+                verbose_name=_("model"),
             )
 
             _object_id = models.PositiveIntegerField(
-                verbose_name=_("ID")
+                verbose_name=_("ID"),
             )
 
             _content_object = GenericForeignKey('_content_type', '_object_id')
@@ -332,7 +339,7 @@ class ModelInstanceBackend(MetadataBackend):
                     Site,
                     null=True,
                     blank=True,
-                    verbose_name=_("site")
+                    verbose_name=_("site"),
                 )
 
             if options.use_i18n:
@@ -346,8 +353,8 @@ class ModelInstanceBackend(MetadataBackend):
                 )
 
             objects = self.get_manager(options)()
-        
-            def __unicode__(self):
+
+            def __str__(self):
                 return self._path
 
             class Meta:
@@ -363,7 +370,8 @@ class ModelInstanceBackend(MetadataBackend):
                 return {'model_instance': self._content_object}
 
             def _resolve_value(self, name):
-                value = super(ModelInstanceMetadataBase, self)._resolve_value(name)
+                value = super(ModelInstanceMetadataBase, self)._resolve_value(
+                    name)
                 try:
                     return self._resolve_template(value, self._content_object,
                                                   context=self.__context)
@@ -378,7 +386,8 @@ class ModelInstanceBackend(MetadataBackend):
                 else:
                     self._path = path_func()
                 try:
-                    super(ModelInstanceMetadataBase, self).save(*args, **kwargs)
+                    super(ModelInstanceMetadataBase, self).save(*args,
+                                                                **kwargs)
                 except IntegrityError:
                     pass
 
@@ -406,13 +415,14 @@ class ModelBackend(MetadataBackend):
             return queryset.filter(_content_type=content_type)
 
     def get_model(self, options):
+        @python_2_unicode_compatible
         class ModelMetadataBase(MetadataBaseModel):
             __instance = None
             __context = None
 
             _content_type = models.ForeignKey(
                 ContentType,
-                verbose_name=_("model")
+                verbose_name=_("model"),
             )
 
             if options.use_sites:
@@ -420,7 +430,7 @@ class ModelBackend(MetadataBackend):
                     Site,
                     null=True,
                     blank=True,
-                    verbose_name=_("site")
+                    verbose_name=_("site"),
                 )
 
             if options.use_i18n:
@@ -430,13 +440,13 @@ class ModelBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     db_index=True,
-                    choices=settings.LANGUAGES
+                    choices=settings.LANGUAGES,
                 )
 
             objects = self.get_manager(options)()
 
-            def __unicode__(self):
-                return unicode(self._content_type)
+            def __str__(self):
+                return self._content_type
 
             def _process_context(self, context):
                 """ Use the given model instance as context for rendering
@@ -450,7 +460,8 @@ class ModelBackend(MetadataBackend):
 
             def _resolve_value(self, name):
                 value = super(ModelMetadataBase, self)._resolve_value(name)
-                content_object = getattr(self.__instance, '_content_object', None)
+                content_object = getattr(self.__instance, '_content_object',
+                                         None)
                 return self._resolve_template(value, content_object,
                                               context=self.__context)
 
@@ -462,10 +473,10 @@ class ModelBackend(MetadataBackend):
 
     @staticmethod
     def validate(options):
-        """ Validates the application of this backend to a given metadata 
-        """
+        """Validates the application of this backend to a given metadata."""
         try:
-            if options.backends.index('modelinstance') > options.backends.index('model'):
+            if options.backends.index(
+                    'modelinstance') > options.backends.index('model'):
                 raise Exception("Metadata backend 'modelinstance' must come "
                                 "before 'model' backend")
         except ValueError:
