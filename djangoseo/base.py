@@ -185,7 +185,7 @@ class MetadataBase(type):
         options = Options(Meta, help_text)
 
         # Collect and sort our elements
-        elements = [(key, attrs.pop(key)) for key, obj in attrs.items()
+        elements = [(key, attrs.pop(key)) for key, obj in list(attrs.items())
                     if isinstance(obj, MetadataField)]
         elements.sort(key=lambda e: e[1].creation_counter)
         elements = OrderedDict(elements)
@@ -272,18 +272,18 @@ def _get_metadata_model(name=None):
         except KeyError:
             if len(registry) == 1:
                 valid_names = 'Try using the name "%s" or simply leaving it '\
-                              'out altogether.' % registry.keys()[0]
+                              'out altogether.' % list(registry)[0]
             else:
                 valid_names = "Valid names are " + ", ".join(
-                    '"%s"' % k for k in registry.keys())
+                    '"%s"' % k for k in list(registry))
             raise Exception(
                 "Metadata definition with name \"%s\" does not exist.\n%s" % (
                     name, valid_names))
     else:
-        assert len(
-            registry) == 1, "You must have exactly one Metadata class, if " \
-                            "using get_metadata() without a 'name' parameter."
-        return registry.values()[0]
+        assert len(registry) == 1, \
+            "You must have exactly one Metadata class, if using " \
+            "get_metadata() without a 'name' parameter."
+        return list(registry.values())[0]
 
 
 def get_metadata(path, name=None, context=None, site=None, language=None):
@@ -391,7 +391,7 @@ def _delete_callback(model_class, sender, instance, **kwargs):
 
 
 def register_signals():
-    for metadata_class in registry.values():
+    for metadata_class in list(registry.values()):
         model_instance = metadata_class._meta.get_model('modelinstance')
         if model_instance is not None:
             update_callback = curry(_update_callback,

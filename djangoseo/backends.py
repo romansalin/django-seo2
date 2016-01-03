@@ -62,10 +62,10 @@ class MetadataBaseModel(models.Model):
             pass
         else:
             if callable(value):
-                if getattr(value, 'im_self', None):
+                if getattr(value, '__self__', None):
                     return value(self)
                 else:
-                    return value(self._metadata, self)
+                    return value(self._metadata, obj=self)
             return value
 
     def _populate_from_kwargs(self):
