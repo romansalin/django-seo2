@@ -10,6 +10,7 @@ except ImportError:
     from django.db.models.options import (get_verbose_name as
                                           camel_case_to_spaces)
 from django.db import models
+from six import binary_type
 
 
 class Options(object):
@@ -64,7 +65,7 @@ class Options(object):
                 fields[key] = field
 
         # 0. Abstract base model with common fields
-        base_meta = type(b'Meta', (), self.original_meta)
+        base_meta = type(binary_type('Meta'), (), self.original_meta)
 
         class BaseMeta(base_meta):
             abstract = True
@@ -73,7 +74,7 @@ class Options(object):
         fields['Meta'] = BaseMeta
         # Do we need this?
         fields['__module__'] = __name__  # attrs['__module__']
-        self.MetadataBaseModel = type(bytes('%sBase' % self.name),
+        self.MetadataBaseModel = type(binary_type('%sBase' % self.name),
                                       (models.Model,), fields)
 
     def _add_backend(self, backend):
@@ -88,9 +89,10 @@ class Options(object):
         new_md_meta['verbose_name_plural'] = '%s (%s)' % (
             self.verbose_name_plural, md_type)
         new_md_meta['unique_together'] = base._meta.unique_together
-        new_md_attrs['Meta'] = type(b"Meta", (), new_md_meta)
+        new_md_attrs['Meta'] = type(binary_type("Meta"), (), new_md_meta)
         new_md_attrs['_metadata_type'] = backend.name
-        model = type(bytes("%s%s" % (self.name, "".join(md_type.split()))),
+        model = type(binary_type("%s%s" % (self.name,
+                                           "".join(md_type.split()))),
                      (base, self.MetadataBaseModel),
                      new_md_attrs.copy())
         self.models[backend.name] = model

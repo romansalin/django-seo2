@@ -11,7 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template import Template, Context
 from django.utils.encoding import python_2_unicode_compatible
-from six import string_types
+from six import string_types, with_metaclass
 
 from djangoseo.utils import resolve_to_name, NotSet, Literal
 
@@ -133,16 +133,17 @@ class BaseManager(models.Manager):
 #      editing each backend individually.
 #      This is probably going to have to be a limitataion we need to live with.
 
-class MetadataBackend(object):
+class MetadataBackendBase(type):
+    def __new__(mcs, name, bases, attrs):
+        new_class = type.__new__(mcs, name, bases, attrs)
+        backend_registry[new_class.name] = new_class
+        return new_class
+
+
+class MetadataBackend(with_metaclass(MetadataBackendBase, object)):
     name = None
     verbose_name = None
     unique_together = None
-
-    class __metaclass__(type):
-        def __new__(mcs, name, bases, attrs):
-            new_class = type.__new__(mcs, name, bases, attrs)
-            backend_registry[new_class.name] = new_class
-            return new_class
 
     def get_unique_together(self, options):
         ut = []

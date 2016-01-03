@@ -124,7 +124,3 @@ def _get_seo_content_types(seo_models):
 
 def get_seo_content_types(seo_models):
     return lazy(_get_seo_content_types, list)(seo_models)
-
-
-def compare(x, y):
-    return (x > y) - (x < y)

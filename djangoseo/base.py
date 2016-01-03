@@ -21,7 +21,6 @@ from djangoseo.utils import NotSet, Literal
 from djangoseo.options import Options
 from djangoseo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
 from djangoseo.backends import backend_registry, RESERVED_FIELD_NAMES
-from djangoseo.utils import compare
 
 registry = OrderedDict()
 
@@ -163,11 +162,11 @@ class BoundMetadataField(object):
 
 
 class MetadataBase(type):
-    def __new__(cls, name, bases, attrs):
+    def __new__(mcs, name, bases, attrs):
         # TODO: Think of a better test to avoid processing Metadata parent
         # class
         if bases == (object,):
-            return type.__new__(cls, name, bases, attrs)
+            return type.__new__(mcs, name, bases, attrs)
 
         # Save options as a dict for now (we will be editing them)
         # TODO: Is this necessary, should we bother relaying Django Meta
@@ -188,8 +187,7 @@ class MetadataBase(type):
         # Collect and sort our elements
         elements = [(key, attrs.pop(key)) for key, obj in attrs.items()
                     if isinstance(obj, MetadataField)]
-        elements.sort(lambda x, y: compare(x[1].creation_counter,
-                                           y[1].creation_counter))
+        elements.sort(key=lambda e: e[1].creation_counter)
         elements = OrderedDict(elements)
 
         # Validation:
@@ -209,7 +207,7 @@ class MetadataBase(type):
                 "Field name '%s' is not allowed" % key
 
         # Preprocessing complete, here is the new class
-        new_class = type.__new__(cls, name, bases, attrs)
+        new_class = type.__new__(mcs, name, bases, attrs)
 
         options.metadata = new_class
         new_class._meta = options
