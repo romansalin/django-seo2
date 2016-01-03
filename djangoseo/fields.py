@@ -1,21 +1,19 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+from __future__ import unicode_literals
 
 import re
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.html import conditional_escape
+from six import string_types
 
 from djangoseo.utils import escape_tags, NotSet, Literal
-
 
 VALID_HEAD_TAGS = "head title base link meta script".split()
 VALID_INLINE_TAGS = (
     "area img object map param "
     "a abbr acronym dfn em strong "
     "code samp kbd var "
-    "b i big small tt " # would like to leave these out :-)
+    "b i big small tt "  # would like to leave these out :-)
     "span br bdo cite del ins q sub sup"
     # NB: deliberately leaving out iframe and script
 ).split()
@@ -24,7 +22,8 @@ VALID_INLINE_TAGS = (
 class MetadataField(object):
     creation_counter = 0
 
-    def __init__(self, name, head, editable, populate_from, valid_tags, choices, help_text, verbose_name, field, field_kwargs):
+    def __init__(self, name, head, editable, populate_from, valid_tags,
+                 choices, help_text, verbose_name, field, field_kwargs):
         self.name = name
         self.head = head
         self.editable = editable
@@ -36,12 +35,12 @@ class MetadataField(object):
             field_kwargs = {}
         self.field_kwargs = field_kwargs
 
-        if choices and isinstance(choices[0], basestring):
+        if choices and isinstance(choices[0], string_types):
             choices = [(c, c) for c in choices]
         field_kwargs.setdefault('choices', choices)
 
         # If valid_tags is a string, tags are space separated words
-        if isinstance(valid_tags, basestring):
+        if isinstance(valid_tags, string_types):
             valid_tags = valid_tags.split()
         if valid_tags is not None:
             valid_tags = set(valid_tags)
@@ -56,23 +55,33 @@ class MetadataField(object):
             self.name = name
         # Populate the hep text from populate_from if it's missing
         if not self.help_text and self.populate_from is not NotSet:
-            if callable(self.populate_from) and hasattr(self.populate_from, 'short_description'):
-                self.help_text = _('If empty, %s') % self.populate_from.short_description
+            if callable(self.populate_from) and \
+                    hasattr(self.populate_from, 'short_description'):
+                self.help_text = _('If empty, %s') \
+                    % self.populate_from.short_description
             elif isinstance(self.populate_from, Literal):
-                self.help_text = _('If empty, \"%s\" will be used.') % self.populate_from.value
-            elif isinstance(self.populate_from, basestring) and self.populate_from in cls._meta.elements:
+                self.help_text = _('If empty, \"%s\" will be used.') \
+                    % self.populate_from.value
+            elif isinstance(self.populate_from, string_types) and \
+                    self.populate_from in cls._meta.elements:
                 field = cls._meta.elements[self.populate_from]
-                self.help_text = _('If empty, %s will be used.') % field.verbose_name or field.name  
-            elif isinstance(self.populate_from, basestring) and hasattr(cls, self.populate_from): 
+                self.help_text = (_('If empty, %s will be used.') %
+                                  field.verbose_name or field.name)
+            elif isinstance(self.populate_from, string_types) and hasattr(
+                    cls, self.populate_from):
                 populate_from = getattr(cls, self.populate_from, None)
-                if callable(populate_from) and hasattr(populate_from, 'short_description'):
-                    self.help_text = _('If empty, %s') % populate_from.short_description
+                if callable(populate_from) and hasattr(populate_from,
+                                                       'short_description'):
+                    self.help_text = _(
+                        'If empty, %s') % populate_from.short_description
         self.validate()
 
     def validate(self):
         """ Discover certain illegal configurations """
         if not self.editable:
-            assert self.populate_from is not NotSet, u"If field (%s) is not editable, you must set populate_from" % self.name
+            assert self.populate_from is not NotSet, \
+                "If field (%s) is not editable, you must set populate_from" \
+                % self.name
 
     def get_field(self):
         kwargs = self.field_kwargs
@@ -91,17 +100,19 @@ class MetadataField(object):
 
 class Tag(MetadataField):
     def __init__(self, name=None, head=False, escape_value=True,
-                 editable=True, verbose_name=None, valid_tags=None, max_length=511,
+                 editable=True, verbose_name=None, valid_tags=None,
+                 max_length=511,
                  choices=None, populate_from=NotSet, field=models.CharField,
                  field_kwargs=None, help_text=None):
-
         self.escape_value = escape_value
-        if field_kwargs is None: 
+        if field_kwargs is None:
             field_kwargs = {}
         field_kwargs.setdefault('max_length', max_length)
         field_kwargs.setdefault('default', "")
         field_kwargs.setdefault('blank', True)
-        super(Tag, self).__init__(name, head, editable, populate_from, valid_tags, choices, help_text, verbose_name, field, field_kwargs)
+        super(Tag, self).__init__(name, head, editable, populate_from,
+                                  valid_tags, choices, help_text, verbose_name,
+                                  field, field_kwargs)
 
     def clean(self, value):
         value = escape_tags(value, self.valid_tags or VALID_INLINE_TAGS)
@@ -109,26 +120,30 @@ class Tag(MetadataField):
         return value.strip()
 
     def render(self, value):
-        return u'<%s>%s</%s>' % (self.name, value, self.name)
+        return '<%s>%s</%s>' % (self.name, value, self.name)
 
 
 VALID_META_NAME = re.compile(r"[A-z][A-z0-9_:.-]*$")
 
 
 class MetaTag(MetadataField):
-    def __init__(self, name=None, head=True, verbose_name=None, editable=True, 
-                 populate_from=NotSet, valid_tags=None, max_length=511, choices=None,
+    def __init__(self, name=None, head=True, verbose_name=None, editable=True,
+                 populate_from=NotSet, valid_tags=None, max_length=511,
+                 choices=None,
                  field=models.CharField, field_kwargs=None, help_text=None):
-        if field_kwargs is None: 
+        if field_kwargs is None:
             field_kwargs = {}
         field_kwargs.setdefault('max_length', max_length)
         field_kwargs.setdefault('default', "")
         field_kwargs.setdefault('blank', True)
 
         if name is not None:
-            assert VALID_META_NAME.match(name) is not None, u"Invalid name for MetaTag: '%s'" % name
+            assert VALID_META_NAME.match(
+                name) is not None, "Invalid name for MetaTag: '%s'" % name
 
-        super(MetaTag, self).__init__(name, head, editable, populate_from, valid_tags, choices, help_text, verbose_name, field, field_kwargs)
+        super(MetaTag, self).__init__(name, head, editable, populate_from,
+                                      valid_tags, choices, help_text,
+                                      verbose_name, field, field_kwargs)
 
     def clean(self, value):
         value = escape_tags(value, self.valid_tags)
@@ -138,20 +153,22 @@ class MetaTag(MetadataField):
 
     def render(self, value):
         # TODO: HTML/XHTML?
-        return u'<meta name="%s" content="%s" />' % (self.name, value)
+        return '<meta name="%s" content="%s" />' % (self.name, value)
 
 
 class KeywordTag(MetaTag):
-    def __init__(self, name=None, head=True, verbose_name=None, editable=True, 
-                 populate_from=NotSet, valid_tags=None, max_length=511, choices=None,
+    def __init__(self, name=None, head=True, verbose_name=None, editable=True,
+                 populate_from=NotSet, valid_tags=None, max_length=511,
+                 choices=None,
                  field=models.CharField, field_kwargs=None, help_text=None):
         if name is None:
             name = "keywords"
         if valid_tags is None:
             valid_tags = []
-        super(KeywordTag, self).__init__(name, head, verbose_name, editable, 
-                        populate_from, valid_tags, max_length, choices, field,
-                        field_kwargs, help_text)
+        super(KeywordTag, self).__init__(name, head, verbose_name, editable,
+                                         populate_from, valid_tags, max_length,
+                                         choices, field,
+                                         field_kwargs, help_text)
 
     def clean(self, value):
         value = escape_tags(value, self.valid_tags)
@@ -162,14 +179,17 @@ class KeywordTag(MetaTag):
 
 # TODO: if max_length is given, use a CharField and pass it through
 class Raw(MetadataField):
-    def __init__(self, head=True, editable=True, populate_from=NotSet, 
-                 verbose_name=None, valid_tags=None, choices=None, field=models.TextField,
+    def __init__(self, head=True, editable=True, populate_from=NotSet,
+                 verbose_name=None, valid_tags=None, choices=None,
+                 field=models.TextField,
                  field_kwargs=None, help_text=None):
-        if field_kwargs is None: 
+        if field_kwargs is None:
             field_kwargs = {}
         field_kwargs.setdefault('default', "")
         field_kwargs.setdefault('blank', True)
-        super(Raw, self).__init__(None, head, editable, populate_from, valid_tags, choices, help_text, verbose_name, field, field_kwargs)
+        super(Raw, self).__init__(None, head, editable, populate_from,
+                                  valid_tags, choices, help_text, verbose_name,
+                                  field, field_kwargs)
 
     def clean(self, value):
         # Find a suitable set of valid tags using self.head and self.valid_tags

@@ -1,4 +1,8 @@
 # .coveragerc to control coverage.py
 [run]
-source=djangoseo
+source = djangoseo
 omit = tests/*
+
+[report]
+# Ignore missing source files, i.e. fake template-generated "files"
+ignore_errors = true

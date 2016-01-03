@@ -1,13 +1,32 @@
 language: python
+
 python:
-  - "2.7"
+  - 3.5
+
 env:
-  - DJANGO=1.7 DB=sqlite
-  - DJANGO=1.8 DB=sqlite
+  - TOX_ENV=lint
+  - TOX_ENV=docs
+  - TOX_ENV=py35-django19
+  - TOX_ENV=py34-django19
+  - TOX_ENV=py27-django19
+  - TOX_ENV=py35-django18
+  - TOX_ENV=py34-django18
+  - TOX_ENV=py33-django18
+  - TOX_ENV=py27-django18
+  - TOX_ENV=py34-django17
+  - TOX_ENV=py33-django17
+  - TOX_ENV=py27-django17
+
+matrix:
+  allow_failures:
+    - env: TOX_ENV=lint
+    - env: TOX_ENV=docs
+
 install:
-  - pip install -q Django==$DJANGO
-  - pip install coveralls coverage django-discover-runner
+  - pip install tox
+
 script:
-  - coverage run --rcfile=.coveragerc setup.py test
+  - tox -e $TOX_ENV
+
 after_success:
   - coveralls

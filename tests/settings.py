@@ -2,8 +2,11 @@
 Django settings for tests project.
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from __future__ import unicode_literals
+
 import os
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -34,13 +37,14 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates" or
+    # "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
@@ -55,7 +59,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 ROOT_URLCONF = 'tests.urls'
 
-#WSGI_APPLICATION = 'tests.wsgi.application'
+# WSGI_APPLICATION = 'tests.wsgi.application'
 
 
 # Database
@@ -71,7 +75,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'ru-RU'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -92,13 +96,8 @@ SITE_ID = 1
 
 CACHE_BACKEND = 'dummy://'
 # Enable when testing cache
-#CACHE_BACKEND = "locmem://?timeout=30&max_entries=400"
+# CACHE_BACKEND = "locmem://?timeout=30&max_entries=400"
 
 SEO_MODELS = ('userapp',)
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-try:
-    from settings_local import *
-except ImportError:
-    pass

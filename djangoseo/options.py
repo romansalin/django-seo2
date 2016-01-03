@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+from __future__ import unicode_literals
 
 from collections import OrderedDict
 
@@ -8,7 +7,8 @@ from django.apps import apps
 try:
     from django.utils.text import camel_case_to_spaces
 except ImportError:
-    from django.db.models.options import get_verbose_name as camel_case_to_spaces
+    from django.db.models.options import (get_verbose_name as
+                                          camel_case_to_spaces)
 from django.db import models
 
 
@@ -22,7 +22,8 @@ class Options(object):
         self.seo_views = meta.pop('seo_views', [])
         self.verbose_name = meta.pop('verbose_name', None)
         self.verbose_name_plural = meta.pop('verbose_name_plural', None)
-        self.backends = list(meta.pop('backends', ('path', 'modelinstance', 'model', 'view')))
+        self.backends = list(meta.pop('backends', ('path', 'modelinstance',
+                                                   'model', 'view')))
         self._set_seo_models(meta.pop('seo_models', []))
         self.bulk_help_text = help_text
         self.original_meta = meta
@@ -40,10 +41,13 @@ class Options(object):
     def _update_from_name(self, name):
         self.name = name
         self.verbose_name = self.verbose_name or camel_case_to_spaces(name)
-        self.verbose_name_plural = self.verbose_name_plural or self.verbose_name + 's'
+        self.verbose_name_plural = (self.verbose_name_plural or
+                                    self.verbose_name + 's')
 
     def _register_elements(self, elements):
-        """ Takes elements from the metadata class and creates a base model for all backend models .
+        """
+        Takes elements from the metadata class and creates a base model for
+        all backend models.
         """
         self.elements = elements
 
@@ -60,7 +64,7 @@ class Options(object):
                 fields[key] = field
 
         # 0. Abstract base model with common fields
-        base_meta = type('Meta', (), self.original_meta)
+        base_meta = type(str('Meta'), (), self.original_meta)
 
         class BaseMeta(base_meta):
             abstract = True
@@ -68,11 +72,12 @@ class Options(object):
 
         fields['Meta'] = BaseMeta
         # Do we need this?
-        fields['__module__'] = __name__ # attrs['__module__']
-        self.MetadataBaseModel = type('%sBase' % self.name, (models.Model,), fields)
+        fields['__module__'] = __name__  # attrs['__module__']
+        self.MetadataBaseModel = type(str('%sBase' % self.name),
+                                      (models.Model,), fields)
 
     def _add_backend(self, backend):
-        """ Builds a subclass model for the given backend """
+        """Builds a subclass model for the given backend."""
         md_type = backend.verbose_name
         base = backend().get_model(self)
         # TODO: Rename this field
@@ -80,17 +85,21 @@ class Options(object):
 
         new_md_meta = {}
         new_md_meta['verbose_name'] = '%s (%s)' % (self.verbose_name, md_type)
-        new_md_meta['verbose_name_plural'] = '%s (%s)' % (self.verbose_name_plural, md_type)
+        new_md_meta['verbose_name_plural'] = '%s (%s)' % (
+            self.verbose_name_plural, md_type)
         new_md_meta['unique_together'] = base._meta.unique_together
-        new_md_attrs['Meta'] = type("Meta", (), new_md_meta)
+        new_md_attrs['Meta'] = type(str("Meta"), (), new_md_meta)
         new_md_attrs['_metadata_type'] = backend.name
-        model = type("%s%s" % (self.name, "".join(md_type.split())), (base, self.MetadataBaseModel), new_md_attrs.copy())
+        model = type(str("%s%s" % (self.name, "".join(md_type.split()))),
+                     (base, self.MetadataBaseModel),
+                     new_md_attrs.copy())
         self.models[backend.name] = model
-        # This is a little dangerous, but because we set __module__ to __name__, the model needs tobe accessible here
+        # This is a little dangerous, but because we set __module__ to
+        # __name__, the model needs tobe accessible here
         globals()[model.__name__] = model
 
     def _set_seo_models(self, value):
-        """ Gets the actual models to be used. """
+        """Gets the actual models to be used."""
         seo_models = []
         for model_name in value:
             if "." in model_name:
@@ -99,8 +108,8 @@ class Options(object):
                 if model:
                     seo_models.append(model)
             else:
-                app = apps.get_app_config(model_name).models_module
+                app = apps.get_app_config(model_name)
                 if app:
-                    seo_models.extend(apps.get_models(app))
+                    seo_models.extend(app.get_models())
 
         self.seo_models = seo_models

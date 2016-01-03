@@ -1,7 +1,8 @@
-# -*- coding: UTF-8 -*-
-from djangoseo import seo
+from __future__ import unicode_literals
+
 from django.db import models
-from django.contrib.sites.models import Site
+
+from djangoseo import seo
 
 
 def get_site_name(metadata, **kwargs):
@@ -10,13 +11,15 @@ def get_site_name(metadata, **kwargs):
 
 def get_model_instance_content(metadata, model_instance=None, **kwargs):
     if model_instance:
-        return u'model instance content: %s' % model_instance.content
+        return 'model instance content: %s' % model_instance.content
     return 'no model instance'
 
 
 class Coverage(seo.Metadata):
-    """ A SEO metadata definition, which should cover all configurable options.
     """
+    A SEO metadata definition, which should cover all configurable options.
+    """
+
     def get_populate_from1(self, metadata, **kwargs):
         return "wxy"
 
@@ -26,20 +29,25 @@ class Coverage(seo.Metadata):
     get_populate_from2.short_description = "Always xyz"
 
     title = seo.Tag(populate_from=seo.Literal("example.com"), head=True)
-    heading = seo.Tag(max_length=68, name="hs:tag", verbose_name="tag two", head=True)
+    heading = seo.Tag(max_length=68, name="hs:tag", verbose_name="tag two",
+                      head=True)
 
     keywords = seo.KeywordTag()
-    description = seo.MetaTag(max_length=155, name="hs:metatag", verbose_name="metatag two")
+    description = seo.MetaTag(max_length=155, name="hs:metatag",
+                              verbose_name="metatag two")
 
     raw1 = seo.Raw()
-    raw2 = seo.Raw(head=True, verbose_name="raw two", valid_tags=("meta", "title"))
+    raw2 = seo.Raw(head=True, verbose_name="raw two",
+                   valid_tags=("meta", "title"))
 
     help_text1 = seo.Tag(help_text="Some help text 1.")
     help_text2 = seo.Tag(populate_from="def")
-    help_text3 = seo.Tag(populate_from=get_populate_from1, help_text="Some help text 3.")
+    help_text3 = seo.Tag(populate_from=get_populate_from1,
+                         help_text="Some help text 3.")
     help_text4 = seo.Tag(populate_from=get_populate_from2)
     help_text5 = seo.Tag(populate_from="heading")
-    help_text6 = seo.Tag(populate_from="heading", help_text="Some help text 6.")
+    help_text6 = seo.Tag(populate_from="heading",
+                         help_text="Some help text 6.")
 
     populate_from1 = seo.Tag(populate_from="get_populate_from1")
     populate_from2 = seo.Tag(populate_from="heading")
@@ -57,7 +65,8 @@ class Coverage(seo.Metadata):
         use_sites = False
         groups = {
             'advanced': ('raw1', 'raw2'),
-            'help_text': ('help_text1', 'help_text2', 'help_text3', 'help_text4',)
+            'help_text': (
+                'help_text1', 'help_text2', 'help_text3', 'help_text4',)
         }
         seo_models = ('userapp',)
         seo_views = ('userapp',)

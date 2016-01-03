@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+from __future__ import unicode_literals
 
 import importlib
 
@@ -15,17 +14,17 @@ def get_view_names(seo_views):
     for name in seo_views:
         try:
             app = apps.get_app_config(name).models_module
-        except:
+        except Exception:
             output.append(name)
         else:
             app_name = app.__name__.split(".")[:-1]
             app_name.append("urls")
             try:
-                urls = importlib.import_module(".".join(app_name)).urlpatterns
+                urls = importlib.import_module(".".join(app_name))
             except (ImportError, AttributeError):
                 output.append(name)
             else:
-                for url in urls:
+                for url in urls.urlpatterns:
                     if getattr(url, 'name', None):
                         output.append(url.name)
     return output

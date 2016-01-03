@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import warnings
 
@@ -9,15 +9,18 @@ from djangoseo.base import registry, populate_metadata
 
 
 class Command(BaseCommand):
-    help = "Populate the database with metadata instances for all models listed in seo_models."
+    help = "Populate the database with metadata instances for all models " \
+           "listed in seo_models."
 
     @staticmethod
     def populate_all_metadata():
-        """ Create metadata instances for all models in seo_models if empty.
-            Once you have created a single metadata instance, this will not run.
-            This is because it is a potentially slow operation that need only be
-            done once. If you want to ensure that everything is populated, run the
-            populate_metadata management command.
+        """
+        Create metadata instances for all models in seo_models if empty.
+
+        Once you have created a single metadata instance, this will not run.
+        This is because it is a potentially slow operation that need only be
+        done once. If you want to ensure that everything is populated, run the
+        populate_metadata management command.
         """
         for Metadata in registry.values():
             InstanceMetadata = Metadata._meta.get_model('modelinstance')
