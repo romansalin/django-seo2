@@ -5,10 +5,11 @@ from django.contrib import admin
 from django.contrib.contenttypes.forms import BaseGenericInlineFormSet
 from django.contrib.contenttypes.admin import GenericStackedInline
 from django.contrib.contenttypes.models import ContentType
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.forms.models import fields_for_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
+from six import binary_type
 
 from djangoseo.utils import get_seo_content_types
 from djangoseo.systemviews import get_seo_views
@@ -161,7 +162,7 @@ def get_inline(metadata_class):
         'ct_fk_field': "_object_id",
         'formset': MetadataFormset,
     }
-    return type(b'MetadataInline', (GenericStackedInline,), attrs)
+    return type(binary_type('MetadataInline'), (GenericStackedInline,), attrs)
 
 
 def get_model_form(metadata_class):
@@ -169,7 +170,7 @@ def get_model_form(metadata_class):
 
     # Restrict content type choices to the models set in seo_models
     content_types = get_seo_content_types(metadata_class._meta.seo_models)
-    content_type_choices = [(x._get_pk_val(), smart_unicode(x)) for x in
+    content_type_choices = [(x._get_pk_val(), smart_text(x)) for x in
                             ContentType.objects.filter(id__in=content_types)]
 
     # Get a list of fields, with _content_type at the start
