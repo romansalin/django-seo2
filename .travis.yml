@@ -3,15 +3,15 @@ python:
   - "2.7"
   - "3.3"
   - "3.4"
-  - "3.5"
+  - "pypy"
 env:
   - DJANGO_VERSION=1.7 DB=sqlite
   - DJANGO_VERSION=1.8 DB=sqlite
   - DJANGO_VERSION=1.9 DB=sqlite
 install:
-  - pip install -r requirements.txt --use-mirrors
-  - pip install -r test-requirements.txt --use-mirrors
-  - pip install -q Django==$DJANGO_VERSION --use-mirrors
+  - pip install -r requirements.txt
+  - pip install -r test-requirements.txt
+  - pip install -q Django==$DJANGO_VERSION
 before_script:
   - flake8 djangoseo tests --ignore=F401
 script:
