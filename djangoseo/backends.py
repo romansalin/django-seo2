@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from collections import OrderedDict
+import collections
 
 from django.utils.translation import ugettext_lazy as _
 from django.db.utils import IntegrityError
@@ -19,7 +19,7 @@ RESERVED_FIELD_NAMES = ('_metadata', '_path', '_content_type', '_object_id',
                         '_content_object', '_view', '_site', 'objects',
                         '_resolve_value', '_set_context', 'id', 'pk')
 
-backend_registry = OrderedDict()
+backend_registry = collections.OrderedDict()
 
 
 class MetadataBaseModel(models.Model):
@@ -48,7 +48,7 @@ class MetadataBaseModel(models.Model):
 
             # Otherwise, return an appropriate default value (populate_from)
             populate_from = element.populate_from
-            if callable(populate_from):
+            if isinstance(populate_from, collections.Callable):
                 return populate_from(self, **self._populate_from_kwargs())
             elif isinstance(populate_from, Literal):
                 return populate_from.value
@@ -61,7 +61,7 @@ class MetadataBaseModel(models.Model):
         except AttributeError:
             pass
         else:
-            if callable(value):
+            if isinstance(value, collections.Callable):
                 if getattr(value, '__self__', None):
                     return value(self)
                 else:

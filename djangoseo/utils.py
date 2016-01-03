@@ -40,7 +40,7 @@ def _pattern_resolve_to_name(pattern, path):
             name = pattern._callback_str
         else:
             name = "%s.%s" % (pattern.callback.__module__,
-                              pattern.callback.func_name)
+                              pattern.callback.__name__)
         return name
 
 
