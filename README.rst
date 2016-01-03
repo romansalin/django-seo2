@@ -1,6 +1,6 @@
-================
-Django SEO tools
-================
+==========
+Django SEO
+==========
 
 .. image:: https://travis-ci.org/romansalin/django-seo.svg?branch=master
     :target: https://travis-ci.org/romansalin/django-seo?branch=master
@@ -8,18 +8,37 @@ Django SEO tools
 .. image:: https://coveralls.io/repos/romansalin/django-seo/badge.svg?branch=master
     :target: https://coveralls.io/r/romansalin/django-seo?branch=master
 
-This is a set of SEO tools for Django.
-It allows you to associate metadata with:
+Overview
+--------
+
+This is a set of SEO tools for Django. It allows you to associate metadata with:
 
 * absolute paths
 * model instances
 * model classes
 * views
 
-Metadata can be edited in the admin in a centralised place, but also alongside any associated models.
+Metadata can be edited in the Django Admin in a centralised place,
+but also alongside any associated models.
 
-This is however a framework, not an app. You therefore have
-complete control over the data you store.
+This is however a framework, not an app. To use this library, you need to define
+the metadata you want and add the output to your templates.
+Everything else (retrieval, formatting, escaping, caching) is handled for you.
+Therefore, you have complete control over the data you store.
+
+As requirements change, it may become necessary to add new metadata fields.
+Having the metadata definition confined to a single, short class means that it
+is easy to update.
+
+Requirements
+------------
+
+* Python (2.7, 3.3, 3.4, 3.5)
+* Django (1.7, 1.8, 1.9)
+
+Example
+-------
+
 Here is an example of a definition:
 
 .. code:: python
