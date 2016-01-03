@@ -20,6 +20,7 @@ If you are reporting a bug, please include:
 * Your operating system name and version.
 * Any details about your local setup that might be helpful in troubleshooting.
 * Detailed steps to reproduce the bug.
+* Expected and actual result you get.
 
 Fix Bugs
 ~~~~~~~~
@@ -43,7 +44,8 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/romansalin/django-seo/issues.
+The best way to send feedback is to file an issue at
+https://github.com/romansalin/django-seo/issues.
 
 If you are proposing a feature:
 
@@ -55,30 +57,40 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `django-seo` for
-local development.
+Ready to contribute? Here's how to set up `django-seo` for local development.
 
-1. Fork_ the `django-seo` repo on GitHub.
+1. Fork the `django-seo` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/django-seo.git
+    $ git clone git@github.com:your_name_here/django-seo.git && cd django-seo
+    $ git remote set-url --push origin https://github.com/<your-name>/django-seo.git
 
-3. Create a branch for local development::
+3. Install your local copy into a virtualenv. Assuming you have
+   virtualenvwrapper installed, this is how you set up your fork for local
+   development::
 
-    $ git checkout -b name-of-your-bugfix-or-feature
+    $ mkvirtualenv django-seo
+    $ python setup.py develop
 
-Now you can make your changes locally.
+4. Create a branch for local development::
 
-4. When you're done making changes, check that your changes pass style and unit
-   tests.
+    $ git checkout -b your-new-bugfix-or-feature
 
-5. Commit your changes and push your branch to GitHub::
+   Now you can make your changes locally.
+
+5. When you're done making changes, check that your changes pass style and
+   unit tests::
+
+    $ tox -e lint
+    $ tox -e <python version>-<django-version>
+
+6. Commit your changes and push your branch to GitHub::
 
     $ git add .
-    $ git commit -m "Your detailed description of your changes."
-    $ git push origin name-of-your-bugfix-or-feature
+    $ git commit    # Please fill all fields that make sense
+    $ git push origin your-new-bugfix-or-feature
 
-6. Submit a pull request through the GitHub website.
+7. Submit a pull request through the GitHub website.
 
 Pull Request Guidelines
 -----------------------
@@ -86,10 +98,9 @@ Pull Request Guidelines
 Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
-2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
-   feature to the list in README.rst.
-3. The pull request should work for Python 2.7, 3.3, 3.4 and 3.5.
-   Check https://travis-ci.org/romansalin/django-seo
-   under pull requests for active pull requests and make sure that the tests
-   pass for all supported Python versions.
+2. If the pull request adds functionality, the docs should be updated.
+3. The pull request should work for both Python 2 and 3 and for Django,
+   starting from 1.7 version.
+   Check https://travis-ci.org/romansalin/django-seo under pull requests for
+   active pull requests and make sure that the tests pass for all supported
+   Python versions.

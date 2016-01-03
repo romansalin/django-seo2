@@ -21,7 +21,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     packages=find_packages(exclude=["docs*", "tests*"]),
-    install_requires=read_file("requirements.txt").splitlines(),
+    install_requires=[],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",

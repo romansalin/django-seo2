@@ -1,20 +1,31 @@
 language: python
-python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "pypy"
+
 env:
-  - DJANGO_VERSION=1.7 DB=sqlite
-  - DJANGO_VERSION=1.8 DB=sqlite
-  - DJANGO_VERSION=1.9 DB=sqlite
+  - TOX_ENV=lint
+  - TOX_ENV=docs
+  - TOX_ENV=py35-django19
+  - TOX_ENV=py34-django19
+  - TOX_ENV=py27-django19
+  - TOX_ENV=py35-django19
+  - TOX_ENV=py34-django18
+  - TOX_ENV=py33-django18
+  - TOX_ENV=py32-django18
+  - TOX_ENV=py27-django18
+  - TOX_ENV=py34-django17
+  - TOX_ENV=py33-django17
+  - TOX_ENV=py32-django17
+  - TOX_ENV=py27-django17
+
+matrix:
+  allow_failures:
+    - env: TOX_ENV=lint
+    - env: TOX_ENV=docs
+
 install:
-  - pip install -r requirements.txt
-  - pip install -r test-requirements.txt
-  - pip install -q Django==$DJANGO_VERSION
-before_script:
-  - flake8 djangoseo tests --ignore=F401
+  - pip install tox
+
 script:
-  - coverage run --rcfile=.coveragerc setup.py test
+  - tox -e $TOX_ENV
+
 after_success:
   - coveralls
