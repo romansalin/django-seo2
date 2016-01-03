@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 # * Make backends optional: Meta.backends = (path, modelinstance/model, view)
 
 import hashlib
-from collections import OrderedDict
+import collections
 
 from django.db import models
 from django.utils.functional import curry
@@ -22,7 +22,7 @@ from djangoseo.options import Options
 from djangoseo.fields import MetadataField, Tag, MetaTag, KeywordTag, Raw
 from djangoseo.backends import backend_registry, RESERVED_FIELD_NAMES
 
-registry = OrderedDict()
+registry = collections.OrderedDict()
 
 
 @python_2_unicode_compatible
@@ -78,7 +78,7 @@ class FormattedMetadata(object):
         # TODO: This is duplicated in meta_models. Move this to a common home.
         if name in self.__metadata._meta.elements:
             populate_from = self.__metadata._meta.elements[name].populate_from
-            if callable(populate_from):
+            if isinstance(populate_from, collections.Callable):
                 return populate_from(None)
             elif isinstance(populate_from, Literal):
                 return populate_from.value
@@ -188,7 +188,7 @@ class MetadataBase(type):
         elements = [(key, attrs.pop(key)) for key, obj in list(attrs.items())
                     if isinstance(obj, MetadataField)]
         elements.sort(key=lambda e: e[1].creation_counter)
-        elements = OrderedDict(elements)
+        elements = collections.OrderedDict(elements)
 
         # Validation:
         # TODO: Write a test framework for seo.Metadata validation
