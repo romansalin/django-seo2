@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Django SEO documentation build configuration file
+# django-seo2 documentation build configuration file
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -34,7 +34,7 @@ source_suffix = '.txt'
 master_doc = 'contents'
 
 # General substitutions.
-project = 'Django SEO'
+project = 'django-seo2'
 copyright = '2010, Will Hardy'
 
 # The default replacements for |version| and |release|, also used in various
@@ -141,7 +141,7 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DjangoSEO'
+htmlhelp_basename = 'django-seo2'
 
 
 # Options for LaTeX output
@@ -156,7 +156,7 @@ htmlhelp_basename = 'DjangoSEO'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'DjangoSEO.tex', 'Django SEO Documentation',
+  ('index', 'djangoseo2.tex', 'django-seo2 Documentation',
    'Will Hardy', 'manual'),
 ]
 

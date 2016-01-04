@@ -1,13 +1,13 @@
 .. _introduction-background:
 
-=====================
-Welcome to Django SEO
-=====================
+======================
+Welcome to django-seo2
+======================
 
 Design
 ------
 
-Django SEO is a library that allows you to attach metadata to:
+django-seo2 is a library that allows you to attach metadata to:
 
 - Paths
 - Model instances

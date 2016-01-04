@@ -4,7 +4,7 @@
 SEO with Django - Best Practices
 ================================
 
-The following information is not specific to this Django SEO framework, but rather use of SEO with Django in general. 
+The following information is not specific to this django-seo2 framework, but rather use of SEO with Django in general.
 
 Essential knowledge
 ===================

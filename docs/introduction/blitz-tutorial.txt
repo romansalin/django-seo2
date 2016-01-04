@@ -1,8 +1,8 @@
 .. _introduction-blitz-tutorial:
 
-=======================================
-Django SEO Framework 60-Second-Tutorial
-=======================================
+========================================
+django-seo2 Framework 60-Second-Tutorial
+========================================
 
 This is an inordinately brief tutorial, for Django experts who don't like to waste time.
 

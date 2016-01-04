@@ -9,11 +9,11 @@ def read_file(filepath):
 
 
 setup(
-    name="django-seo",
+    name="django-seo2",
     version=VERSION,
     description="A framework for managing SEO metadata in Django.",
     long_description=read_file('README.rst'),
-    url="https://github.com/romansalin/django-seo",
+    url="https://github.com/romansalin/django-seo2",
     author="Roman Salin",
     author_email="romansalin1990@gmail.com",
     keywords="seo django framework",

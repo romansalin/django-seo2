@@ -1,8 +1,8 @@
 .. _contents:
 
-=================================
-Django SEO documentation contents
-=================================
+==================================
+django-seo2 documentation contents
+==================================
 
 .. toctree::
    :maxdepth: 2

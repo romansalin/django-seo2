@@ -1,8 +1,8 @@
 .. _introduction-tutorial:
 
-=============================
-Django SEO Framework Tutorial
-=============================
+==============================
+django-seo2 Framework Tutorial
+==============================
 
 Adding SEO to your Django site is easy, you need to do two things:
 

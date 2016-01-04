@@ -1,17 +1,18 @@
-==========
-Django SEO
-==========
+===========
+django-seo2
+===========
 
-.. image:: https://travis-ci.org/romansalin/django-seo.svg?branch=master
-    :target: https://travis-ci.org/romansalin/django-seo?branch=master
+.. image:: https://travis-ci.org/romansalin/django-seo2.svg?branch=master
+    :target: https://travis-ci.org/romansalin/django-seo2?branch=master
 
-.. image:: https://coveralls.io/repos/romansalin/django-seo/badge.svg?branch=master
-    :target: https://coveralls.io/r/romansalin/django-seo?branch=master
+.. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master
+    :target: https://coveralls.io/r/romansalin/django-seo2?branch=master
 
 Overview
 --------
 
-This is a set of SEO tools for Django. It allows you to associate metadata with:
+This is a set of powerful and flexible SEO tools for Django. It allows you
+to associate metadata with:
 
 * absolute paths
 * model instances
@@ -60,3 +61,10 @@ Here is an example of a definition:
 As you can see it is very flexible, but there is much more than this simple example.
 
 The full documentation can be read online at http://django-seo.readthedocs.org/.
+
+History
+-------
+
+This is a fork of django-seo_, which is no longer maintained.
+
+.. _django-seo: https://github.com/willhardy/django-seo
