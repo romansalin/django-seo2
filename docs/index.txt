@@ -1,8 +1,8 @@
-========================
-Django SEO Documentation
-========================
+=========================
+django-seo2 Documentation
+=========================
 
-Django SEO is a Django based framework, allowing you to manage SEO (Search Engine Optimisation) metadata.
+django-seo2 is a Django based framework, allowing you to manage SEO (Search Engine Optimisation) metadata.
 
 First steps
 ===========
@@ -23,7 +23,7 @@ More information
 ================
 
 - :ref:`Best practice <topics-best-practices>`
-- :ref:`Django SEO contributors' guide <reference-developers>`
+- :ref:`django-seo2 contributors' guide <reference-developers>`
 
 Indices and tables
 ==================
