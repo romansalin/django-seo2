@@ -1,8 +1,7 @@
-=========================
-django-seo2 Documentation
-=========================
+Welcome to django-seo2's documentation!
+=======================================
 
-django-seo2 is a Django based framework, allowing you to manage SEO (Search Engine Optimisation) metadata.
+Django-seo2 is a Django based framework, allowing you to manage SEO (Search Engine Optimisation) metadata.
 
 First steps
 ===========
@@ -22,7 +21,6 @@ Reference
 More information
 ================
 
-- :ref:`Best practice <topics-best-practices>`
 - :ref:`django-seo2 contributors' guide <reference-developers>`
 
 Indices and tables

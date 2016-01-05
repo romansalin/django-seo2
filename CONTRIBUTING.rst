@@ -37,7 +37,7 @@ is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-`django-seo2` could always use more documentation, whether as part of the
+`Django-seo2` could always use more documentation, whether as part of the
 official `django-seo2` docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 

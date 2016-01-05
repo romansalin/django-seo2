@@ -1,7 +1,7 @@
 .. _introduction-blitz-tutorial:
 
 ========================================
-django-seo2 Framework 60-Second-Tutorial
+Django-seo2 Framework 60-Second-Tutorial
 ========================================
 
 This is an inordinately brief tutorial, for Django experts who don't like to waste time.
@@ -44,7 +44,7 @@ To edit the data in the admin, call ``register_seo_admin`` with the admin site a
 
 
 Step Four: Adding to templates
------------------------------------
+------------------------------
 
 To get the metadata in your templates, use the ``{% get_metadata %}`` template tag:
 
