@@ -30,4 +30,3 @@ script:
 
 after_success:
   - tox -e cover
-  - coveralls

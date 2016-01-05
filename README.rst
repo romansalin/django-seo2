@@ -5,8 +5,8 @@ django-seo2
 .. image:: https://travis-ci.org/romansalin/django-seo2.svg?branch=master
     :target: https://travis-ci.org/romansalin/django-seo2?branch=master
 
-.. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master
-    :target: https://coveralls.io/r/romansalin/django-seo2?branch=master
+.. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/romansalin/django-seo2?branch=master
 
 .. image:: https://img.shields.io/pypi/v/django-seo2.svg
     :target: https://pypi.python.org/pypi/django-seo2
