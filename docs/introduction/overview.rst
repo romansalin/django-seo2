@@ -7,7 +7,7 @@ Welcome to django-seo2
 Design
 ------
 
-django-seo2 is a library that allows you to attach metadata to:
+Django-seo2 is a library that allows you to attach metadata to:
 
 - Paths
 - Model instances

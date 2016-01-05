@@ -16,7 +16,7 @@ This tutorial assumes you already know how to use Django, and that you have a si
 It assumes you have installed the library somewhere where python can get it, and that you've added ``djangoseo`` to your ``INSTALLED_APPS`` setting.
 
 Metadata definition
---------------------
+-------------------
 
 You can define which fields appear in your metadata by creating a class that subclasses ``seo.Metadata``. For example, create a new file called ``seo.py`` in an app on your site:
 
