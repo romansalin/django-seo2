@@ -8,6 +8,9 @@ django-seo2
 .. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master
     :target: https://coveralls.io/r/romansalin/django-seo2?branch=master
 
+.. image:: https://img.shields.io/pypi/v/django-seo2.svg
+    :target: https://pypi.python.org/pypi/django-seo2
+
 .. image:: https://readthedocs.org/projects/django-seo2/badge/?version=latest
     :target: http://django-seo2.readthedocs.org/en/latest/?badge=latest
     :alt: Documentation Status
