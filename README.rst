@@ -41,6 +41,13 @@ Requirements
 * Python (2.7, 3.3, 3.4, 3.5)
 * Django (1.7, 1.8, 1.9)
 
+Installation
+------------
+
+The easiest way to install django-seo2 is to use use ``pip``:
+
+    pip install django-seo2
+
 Example
 -------
 

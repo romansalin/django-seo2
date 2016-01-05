@@ -1,5 +1,4 @@
 include .coveragerc
-include AUTHORS
 include LICENSE
 include MANIFEST.in
 include *.rst
