@@ -1,0 +1,44 @@
+# The format of this file isn't really documented; just use --generate-rcfile
+
+[MASTER]
+# Add <file or directory> to the black list. It should be a base name, not a
+# path. You may set this option multiple times.
+ignore=tests
+
+[MESSAGES CONTROL]
+# C0111: Don't require docstrings on every method
+# W0511: TODOs in code comments are fine.
+# W0142: *args and **kwargs are fine.
+# W0622: Redefining id is fine.
+# W0703: Catch "Exception".
+# W0212: Protected member can be accessed outside the class or descedant.
+disable=C0111,W0511,W0142,W0622,W0703,W0212
+
+[BASIC]
+# Variable names can be 1 to 31 characters long, with lowercase and underscores
+variable-rgx=[a-z_][a-z0-9_]{0,30}$
+
+# Argument names can be 2 to 31 characters long, with lowercase and underscores
+argument-rgx=[a-z_][a-z0-9_]{1,30}$
+
+# Type attributes names can be 2 to 31 characters long, with lowercase and underscores
+attr-rgx=[a-z_][a-z0-9_]{1,30}$
+
+# Method names should be at least 3 characters long
+# and be lowecased with underscores
+method-rgx=([a-z_][a-z0-9_]{2,50}|setUp|tearDown)$
+
+# Don't require docstrings on tests.
+no-docstring-rgx=((__.*__)|([tT]est.*)|setUp|tearDown)$
+
+[DESIGN]
+max-public-methods=100
+min-public-methods=0
+max-args=6
+
+[VARIABLES]
+
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+# _ is used by our localization
+additional-builtins=_

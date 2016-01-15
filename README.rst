@@ -8,6 +8,10 @@ django-seo2
 .. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/romansalin/django-seo2?branch=master
 
+.. image:: https://landscape.io/github/romansalin/django-seo2/master/landscape.svg?style=flat
+    :target: https://landscape.io/github/romansalin/django-seo2/master
+    :alt: Code Health
+
 .. image:: https://img.shields.io/pypi/v/django-seo2.svg
     :target: https://pypi.python.org/pypi/django-seo2
 
@@ -60,7 +64,6 @@ Here is an example of a definition:
 
     from djangoseo import seo
 
-
     class BasicMetadata(seo.Metadata):
         title = seo.Tag(max_length=68, head=True)
         keywords = seo.KeywordTag()
@@ -73,7 +76,6 @@ Here is an example of a definition:
         og_title = seo.MetaTag(name="og:title",
                                populate_from="title",
                                verbose_name="facebook title")
-
         og_description = seo.MetaTag(name="og:description",
                                      populate_from="description",
                                      verbose_name='facebook description')
