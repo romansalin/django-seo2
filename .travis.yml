@@ -30,3 +30,5 @@ script:
 
 after_success:
   - tox -e cover
+
+sudo: false
