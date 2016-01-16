@@ -47,7 +47,7 @@ If you run migrate you will also notice that four new models are created:
 Setting up the Admin
 --------------------
 
-To view and edit these in Django's admin, add the following to your ``urls.py``:
+To view and edit these in Django's admin, add the following to your ``admin.py``:
 
 .. code-block:: python
 
