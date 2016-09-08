@@ -206,7 +206,7 @@ class PathBackend(MetadataBackend):
             if options.use_i18n:
                 _language = models.CharField(
                     _("language"),
-                    max_length=5,
+                    max_length=7,
                     null=True,
                     blank=True,
                     db_index=True,
@@ -273,7 +273,7 @@ class ViewBackend(MetadataBackend):
             if options.use_i18n:
                 _language = models.CharField(
                     _("language"),
-                    max_length=5,
+                    max_length=7,
                     null=True,
                     blank=True,
                     db_index=True,
@@ -347,7 +347,7 @@ class ModelInstanceBackend(MetadataBackend):
             if options.use_i18n:
                 _language = models.CharField(
                     _("language"),
-                    max_length=5,
+                    max_length=7,
                     null=True,
                     blank=True,
                     db_index=True,
@@ -438,7 +438,7 @@ class ModelBackend(MetadataBackend):
             if options.use_i18n:
                 _language = models.CharField(
                     _("language"),
-                    max_length=5,
+                    max_length=7,
                     null=True,
                     blank=True,
                     db_index=True,
