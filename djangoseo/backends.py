@@ -11,6 +11,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template import Template, Context
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils import translation
 from six import string_types, with_metaclass
 
 from djangoseo.utils import resolve_to_name, NotSet, Literal
@@ -386,6 +387,12 @@ class ModelInstanceBackend(MetadataBackend):
                 except AttributeError:
                     pass
                 else:
+                    try:
+                        language = self._language
+                    except AttributeError:
+                        language = translation.get_language()
+
+                    translation.activate(language)
                     self._path = path_func()
                 try:
                     super(ModelInstanceMetadataBase, self).save(*args,
