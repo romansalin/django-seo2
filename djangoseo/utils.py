@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.contrib.contenttypes.models import ContentType
 try:
-    from django.urls import URLResolver, URLPattern, Resolver404, get_resolver
+    from django.urls import URLResolver, RegexPattern as URLPattern, Resolver404, get_resolver
 except Exception:
     from django.core.urlresolvers import (RegexURLResolver as URLResolver, RegexURLPattern as URLPattern, Resolver404, get_resolver)
 
