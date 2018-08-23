@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.contrib.contenttypes.models import ContentType
 try:
-    from django.urls import URLResolver, RegexPattern as URLPattern, Resolver404, get_resolver
+    from django.urls.resolvers import URLResolver, RegexPattern as URLPattern, Resolver404, get_resolver
 except Exception:
     from django.core.urlresolvers import (RegexURLResolver as URLResolver, RegexURLPattern as URLPattern, Resolver404, get_resolver)
 
@@ -60,6 +60,7 @@ def _resolver_resolve_to_name(resolver, path):
     match = get_regex(resolver).search(path)
     if match:
         new_path = path[match.end():]
+        name = None
         for pattern in resolver.url_patterns:
             try:
                 if isinstance(pattern, URLPattern):
@@ -67,12 +68,12 @@ def _resolver_resolve_to_name(resolver, path):
                 elif isinstance(pattern, URLResolver):
                     name = _resolver_resolve_to_name(pattern, new_path)
             except Resolver404 as e:
-                tried.extend([(pattern.regex.pattern + '   ' + t) for t in
+                tried.extend([(pattern.pattern + '   ' + t) for t in
                               e.args[0]['tried']])
             else:
                 if name:
                     return name
-                tried.append(pattern.regex.pattern)
+                tried.append(pattern.pattern)
         raise Resolver404({'tried': tried, 'path': new_path})
 
 
