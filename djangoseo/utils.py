@@ -46,9 +46,18 @@ def _pattern_resolve_to_name(pattern, path):
         return name
 
 
+def get_regex(resolver_or_pattern):
+    """Utility method for django's deprecated resolver.regex"""
+    try:
+        regex = resolver_or_pattern.regex
+    except AttributeError:
+        regex = resolver_or_pattern.pattern.regex
+    return regex
+
+
 def _resolver_resolve_to_name(resolver, path):
     tried = []
-    match = resolver.regex.search(path)
+    match = get_regex(resolver).search(path)
     if match:
         new_path = path[match.end():]
         for pattern in resolver.url_patterns:
