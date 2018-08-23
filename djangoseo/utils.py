@@ -6,8 +6,10 @@ from django.utils.functional import lazy
 from django.utils.safestring import mark_safe
 from django.utils.html import conditional_escape
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import (RegexURLResolver, RegexURLPattern,
-                                      Resolver404, get_resolver)
+try:
+    from django.urls import URLResolver, URLPattern, Resolver404, get_resolver
+except Exception:
+    from django.core.urlresolvers import (RegexURLResolver as URLResolver, RegexURLPattern as URLPattern, Resolver404, get_resolver)
 
 
 class NotSet(object):
@@ -51,9 +53,9 @@ def _resolver_resolve_to_name(resolver, path):
         new_path = path[match.end():]
         for pattern in resolver.url_patterns:
             try:
-                if isinstance(pattern, RegexURLPattern):
+                if isinstance(pattern, URLPattern):
                     name = _pattern_resolve_to_name(pattern, new_path)
-                elif isinstance(pattern, RegexURLResolver):
+                elif isinstance(pattern, URLResolver):
                     name = _resolver_resolve_to_name(pattern, new_path)
             except Resolver404 as e:
                 tried.extend([(pattern.regex.pattern + '   ' + t) for t in
