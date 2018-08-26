@@ -40,7 +40,7 @@ class FormattedMetadata(object):
                 hexpath = hashlib.md5(
                     iri_to_uri(site.domain + path)).hexdigest()
             else:
-                hexpath = hashlib.md5(iri_to_uri(path)).hexdigest()
+                hexpath = hashlib.md5(iri_to_uri(path).encode('utf-8')).hexdigest()
             if metadata._meta.use_i18n:
                 self.__cache_prefix = 'djangoseo.%s.%s.%s' % (
                     self.__metadata.__class__.__name__, hexpath, language)

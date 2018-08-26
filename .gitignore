@@ -63,3 +63,4 @@ target/
 test.db
 tests/settings_local.py
 /migrations/
+.vscode/
