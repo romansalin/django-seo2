@@ -55,6 +55,13 @@ def get_regex(resolver_or_pattern):
     return regex
 
 
+def get_pattern(pattern):
+    try:
+        return pattern.pattern
+    except AttributeError:
+        return pattern.regex.pattern
+
+
 def _resolver_resolve_to_name(resolver, path):
     tried = []
     match = get_regex(resolver).search(path)
@@ -68,12 +75,12 @@ def _resolver_resolve_to_name(resolver, path):
                 elif isinstance(pattern, URLResolver):
                     name = _resolver_resolve_to_name(pattern, new_path)
             except Resolver404 as e:
-                tried.extend([(pattern.pattern + '   ' + t) for t in
+                tried.extend([(get_pattern(pattern) + '   ' + t) for t in
                               e.args[0]['tried']])
             else:
                 if name:
                     return name
-                tried.append(pattern.pattern)
+                tried.append(get_pattern(pattern))
         raise Resolver404({'tried': tried, 'path': new_path})
 
 
