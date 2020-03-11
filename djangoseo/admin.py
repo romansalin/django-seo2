@@ -138,7 +138,7 @@ class MetadataFormset(BaseGenericInlineFormSet):
         form = super(MetadataFormset, self)._construct_form(i, **kwargs)
         # Monkey patch the form to always force a save.
         # It's unfortunate, but necessary because we always want an instance
-        # Affect on performance shouldn't be too great, because ther is only
+        # Affect on performance shouldn't be too great, because there is only
         # ever one metadata attached
         form.empty_permitted = False
         form.has_changed = lambda: True
