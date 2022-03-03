@@ -9,12 +9,12 @@ import hashlib
 import collections
 
 from django.db import models
-from django.utils.functional import curry
+from functools import partial as curry
 from django.contrib.contenttypes.models import ContentType
 from django.utils.safestring import mark_safe
 from django.core.cache import cache
-from django.utils.encoding import iri_to_uri, python_2_unicode_compatible
-from six import with_metaclass, text_type
+from django.utils.encoding import iri_to_uri
+from six import with_metaclass, text_type, python_2_unicode_compatible
 
 
 from djangoseo.utils import NotSet, Literal

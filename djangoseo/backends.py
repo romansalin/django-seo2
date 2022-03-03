@@ -10,8 +10,8 @@ from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.template import Template, Context
-from django.utils.encoding import python_2_unicode_compatible
-from six import string_types, with_metaclass
+# from django.utils.encoding import python_2_unicode_compatible
+from six import string_types, with_metaclass, python_2_unicode_compatible
 
 from djangoseo.utils import resolve_to_name, NotSet, Literal
 
