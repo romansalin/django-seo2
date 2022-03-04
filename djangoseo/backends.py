@@ -328,6 +328,7 @@ class ModelInstanceBackend(MetadataBackend):
             _content_type = models.ForeignKey(
                 ContentType,
                 verbose_name=_("model"),
+                on_delete=models.CASCADE,
             )
 
             _object_id = models.PositiveIntegerField(
@@ -425,6 +426,7 @@ class ModelBackend(MetadataBackend):
             _content_type = models.ForeignKey(
                 ContentType,
                 verbose_name=_("model"),
+                on_delete=models.CASCADE,
             )
 
             if options.use_sites:
