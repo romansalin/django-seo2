@@ -201,6 +201,7 @@ class PathBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     verbose_name=_("site"),
+                    on_delete=models.CASCADE
                 )
 
             if options.use_i18n:
@@ -268,6 +269,7 @@ class ViewBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     verbose_name=_("site"),
+                    on_delete=models.CASCADE
                 )
 
             if options.use_i18n:
@@ -343,6 +345,7 @@ class ModelInstanceBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     verbose_name=_("site"),
+                    on_delete=models.CASCADE
                 )
 
             if options.use_i18n:
@@ -435,6 +438,7 @@ class ModelBackend(MetadataBackend):
                     null=True,
                     blank=True,
                     verbose_name=_("site"),
+                    on_delete=models.CASCADE
                 )
 
             if options.use_i18n:
