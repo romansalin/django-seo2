@@ -31,7 +31,7 @@ class Literal(object):
 
 
 def _pattern_resolve_to_name(pattern, path):
-    match = pattern.regex.search(path)
+    match = pattern.pattern.regex.search(path)
     if match:
         name = ""
         if pattern.name:
@@ -46,7 +46,7 @@ def _pattern_resolve_to_name(pattern, path):
 
 def _resolver_resolve_to_name(resolver, path):
     tried = []
-    match = resolver.regex.search(path)
+    match = resolver.pattern.regex.search(path)
     if match:
         new_path = path[match.end():]
         for pattern in resolver.url_patterns:
