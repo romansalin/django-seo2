@@ -10,3 +10,8 @@ django-seo patches and ideas:
 Django-seo2 authors:
 
 * `Roman Salin <https://github.com/romansalin>`_
+
+yqnk-django-seo authors:
+
+* `Nitin Kondiparthi <https://github.com/nitin-kondiparthi>`_
+* `Yiqing Lan <https://github.com/yiqing-lan>`_

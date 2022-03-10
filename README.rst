@@ -46,6 +46,7 @@ Installation
 Use `pip` plus a `requirements.txt` file to install. For example:
 
 .. code-block:: console
+
     git+https://somehashstring@github.com/PeriShipLLC/yqnk-django-seo.git@tagcommitnumber
 
 
