@@ -2,26 +2,18 @@
 django-seo2
 ===========
 
-.. image:: https://travis-ci.org/romansalin/django-seo2.svg?branch=master
-    :target: https://travis-ci.org/romansalin/django-seo2?branch=master
+History
+-------
+This is a fork of django-seo2_ library, which is no longer maintained.
+The intention of this repo is to make it work under Python 3.8 and Django 3.2 as we upgrade the client project.
+Many thanks for `Nitin Kondiparthi`_ and `Yiqing Lan`_'s work to make that happen.
 
-.. image:: https://coveralls.io/repos/romansalin/django-seo2/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/romansalin/django-seo2?branch=master
-
-.. image:: https://landscape.io/github/romansalin/django-seo2/master/landscape.svg?style=flat
-    :target: https://landscape.io/github/romansalin/django-seo2/master
-    :alt: Code Health
-
-.. image:: https://img.shields.io/pypi/v/django-seo2.svg
-    :target: https://pypi.python.org/pypi/django-seo2
-
-.. image:: https://readthedocs.org/projects/django-seo2/badge/?version=latest
-    :target: http://django-seo2.readthedocs.org/en/latest/?badge=latest
-    :alt: Documentation Status
+.. _django-seo2: https://github.com/romansalin/django-seo2
+.. _Nitin Kondiparthi: https://www.linkedin.com/in/nitin-kondiparthi/
+.. _Yiqing Lan: https://www.linkedin.com/in/yiqinglan/
 
 Overview
 --------
-
 This is a set of powerful and flexible SEO tools for Django. It allows you
 to associate metadata with:
 
@@ -45,15 +37,17 @@ is easy to update.
 Requirements
 ------------
 
-* Python (2.7, 3.3, 3.4, 3.5)
-* Django (1.7, 1.8, 1.9)
+* Python (3.8)
+* Django (3.2)
 
 Installation
-------------
+-------------
 
-The easiest way to install django-seo2 is to use use ``pip``:
+Use `pip` plus a `requirements.txt` file to install. For example:
 
-    pip install django-seo2
+.. code-block:: console
+    git+https://somehashstring@github.com/PeriShipLLC/yqnk-django-seo.git@tagcommitnumber
+
 
 Example
 -------
@@ -84,9 +78,4 @@ As you can see it is very flexible, but there is much more than this simple exam
 
 The full documentation can be read online at http://django-seo2.readthedocs.org/.
 
-History
--------
 
-This is a fork of django-seo_, which is no longer maintained.
-
-.. _django-seo: https://github.com/willhardy/django-seo
